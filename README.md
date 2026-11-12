@@ -84,8 +84,28 @@ The Express server hosts the Vite development app and exposes:
 
 - `GET /api/badges` — read the cached or refreshed badge list. Add `?force=true` to request a refresh.
 - `POST /api/badges/sync` — request an immediate badge refresh.
+- `POST /api/contact` — validates and sends a contact form message through SMTP.
 
 The Credly integration uses its public profile endpoint. If that endpoint is unavailable, the portfolio continues to use its bundled baseline badge data.
+
+### Configure contact form email
+
+The contact form sends messages through an SMTP server. Copy `.env.example` to `.env` and set:
+
+| Variable | Description |
+| --- | --- |
+| `SMTP_HOST` | SMTP server hostname |
+| `SMTP_PORT` | SMTP port (typically `587` for STARTTLS or `465` for implicit TLS) |
+| `SMTP_SECURE` | Set to `true` for implicit TLS; port `465` enables it automatically |
+| `SMTP_USER` | SMTP username, when required by your provider |
+| `SMTP_PASS` | SMTP password or provider-issued app password, when required |
+| `SMTP_FROM` | Verified sender address; defaults to `SMTP_USER` |
+| `SMTP_FROM_NAME` | Sender display name shown in the inbox; defaults to `Portfolio` |
+| `CONTACT_EMAIL_TO` | Inbox that should receive portfolio messages |
+
+The notification uses the configured sender address with the `Portfolio` display name, while the visitor's address is set as `Reply-To` so you can reply directly to them. Keep `.env` private and never commit real SMTP credentials. Restart the server after changing environment settings. The form only confirms delivery after the SMTP server accepts the message; if SMTP isn’t configured or delivery fails, it displays an error and keeps the message available for retry.
+
+If the form reports that it cannot connect to SMTP, check that the machine or hosting provider allows outbound connections on the configured SMTP port. Some networks block SMTP; in that case, use an HTTPS-based email provider/API or a host that permits SMTP egress.
 
 ### Build and run in production mode
 

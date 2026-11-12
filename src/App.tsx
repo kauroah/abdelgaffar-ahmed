@@ -33,6 +33,33 @@ export default function App() {
     }
   }, [isDark]);
 
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('main > section:not(#home)'));
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+
+    sections.forEach((section) => observer.observe(section));
+    document.documentElement.classList.add('motion-ready');
+
+    return () => {
+      observer.disconnect();
+      document.documentElement.classList.remove('motion-ready');
+      sections.forEach((section) => section.classList.remove('is-visible'));
+    };
+  }, []);
+
   const handleToggleTheme = () => {
     setIsDark(prev => !prev);
   };

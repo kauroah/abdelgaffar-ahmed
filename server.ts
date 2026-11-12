@@ -1,8 +1,10 @@
+import 'dotenv/config';
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
+import nodemailer from 'nodemailer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -13,7 +15,7 @@ const CREDLY_USERNAME = 'ahmed-abdelgaffar';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 const CACHE_FILE = path.join(__dirname, '.credly_badges_cache.json');
 
-app.use(express.json());
+app.use(express.json({ limit: '10kb' }));
 
 interface CachedBadgeStore {
   lastSyncTime: number;
@@ -259,6 +261,131 @@ setInterval(() => {
 }, CACHE_TTL_MS);
 
 // API Endpoints
+const contactRateLimits = new Map<string, { count: number; resetAt: number }>();
+let rateLimitRequestsSinceCleanup = 0;
+const allowedContactSubjects = new Set([
+  'Job Opportunity / Technical Role',
+  'Distributed Java Architecture',
+  'Mobile / Flutter Architecture',
+  'AI / RAG Integration',
+  'General Technical Inquiry',
+]);
+
+app.post('/api/contact', async (req, res) => {
+  const { name, email, subject, message, website } = req.body ?? {};
+
+  if (typeof website === 'string' && website.trim()) {
+    res.status(400).json({ error: 'Invalid form submission.' });
+    return;
+  }
+
+  if (
+    typeof name !== 'string' ||
+    typeof email !== 'string' ||
+    typeof subject !== 'string' ||
+    typeof message !== 'string'
+  ) {
+    res.status(400).json({ error: 'Please complete all required fields.' });
+    return;
+  }
+
+  const cleanName = name.trim();
+  const cleanEmail = email.trim();
+  const cleanMessage = message.trim();
+  if (
+    cleanName.length < 1 ||
+    cleanName.length > 100 ||
+    cleanEmail.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail) ||
+    !allowedContactSubjects.has(subject) ||
+    cleanMessage.length < 1 ||
+    cleanMessage.length > 5000
+  ) {
+    res.status(400).json({ error: 'Please check the form fields and try again.' });
+    return;
+  }
+
+  const now = Date.now();
+  const clientKey = req.ip || req.socket.remoteAddress || 'unknown';
+  const clientLimit = contactRateLimits.get(clientKey);
+  if (clientLimit && clientLimit.resetAt > now && clientLimit.count >= 5) {
+    res.status(429).json({ error: 'Too many messages. Please try again in a few minutes.' });
+    return;
+  }
+  if (!clientLimit || clientLimit.resetAt <= now) {
+    contactRateLimits.set(clientKey, { count: 1, resetAt: now + 15 * 60 * 1000 });
+  } else {
+    clientLimit.count += 1;
+  }
+
+  rateLimitRequestsSinceCleanup += 1;
+  if (rateLimitRequestsSinceCleanup >= 100) {
+    for (const [key, limit] of contactRateLimits) {
+      if (limit.resetAt <= now) contactRateLimits.delete(key);
+    }
+    rateLimitRequestsSinceCleanup = 0;
+  }
+
+  const host = process.env.SMTP_HOST;
+  const port = Number(process.env.SMTP_PORT || 587);
+  const username = process.env.SMTP_USER;
+  const password = process.env.SMTP_PASS;
+  const from = process.env.SMTP_FROM || username;
+  const recipient = process.env.CONTACT_EMAIL_TO;
+  if (!host || !Number.isInteger(port) || port < 1 || port > 65535 || !from || !recipient) {
+    res.status(503).json({ error: 'Email is not configured yet. Please use the direct email link instead.' });
+    return;
+  }
+  if ((username && !password) || (!username && password)) {
+    res.status(503).json({ error: 'Email service configuration is incomplete. Please use the direct email link.' });
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: process.env.SMTP_SECURE === 'true' || port === 465,
+    ...(username && password ? { auth: { user: username, pass: password } } : {}),
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 15_000,
+  });
+
+  try {
+    await transporter.sendMail({
+      from: { name: process.env.SMTP_FROM_NAME?.trim() || 'Portfolio', address: from },
+      to: recipient,
+      replyTo: { name: cleanName, address: cleanEmail },
+      subject: `[Portfolio] ${subject}`,
+      text: `Name: ${cleanName}\nEmail: ${cleanEmail}\nTopic: ${subject}\n\n${cleanMessage}`,
+    });
+    res.status(200).json({ message: 'Your message was sent successfully.' });
+  } catch (error) {
+    const details: { code?: string; command?: string; responseCode?: number } = error instanceof Error
+      ? error as Error & { code?: string; command?: string; responseCode?: number }
+      : {};
+    console.error('[Contact Form] SMTP delivery failed:', {
+      code: details.code || 'UNKNOWN',
+      command: details.command,
+      responseCode: details.responseCode,
+    });
+
+    if (details.code === 'ECONNECTION' || details.code === 'ETIMEDOUT') {
+      res.status(502).json({
+        error: 'Could not connect to the SMTP server. This network or hosting provider may block outbound email ports; try an HTTPS email provider or allow SMTP traffic.',
+      });
+    } else if (details.code === 'EAUTH' || details.responseCode === 535) {
+      res.status(502).json({
+        error: 'The SMTP server rejected the credentials. Check the email address and provider-issued app password in the server environment.',
+      });
+    } else {
+      res.status(502).json({ error: 'Your message could not be sent right now. Please try again or use the direct email link.' });
+    }
+  } finally {
+    transporter.close();
+  }
+});
+
 app.get('/api/badges', async (req, res) => {
   const force = req.query.force === 'true';
   const result = await syncCredlyBadges(force);

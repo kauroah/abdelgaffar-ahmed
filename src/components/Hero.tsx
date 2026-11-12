@@ -11,7 +11,7 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onOpenCvStudio }) => {
   return (
     <section id="home" className="relative border-b border-[var(--border)] bg-[var(--background)] pb-14 pt-3 md:pb-24 md:pt-4">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="mb-8 flex items-center justify-between border-b border-[var(--border)] py-2.5 sm:mb-12 sm:py-3">
           <Logo size="md" showLabel />
           <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
@@ -22,22 +22,22 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCvStudio }) => {
 
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14 xl:gap-16">
           <div className="flex flex-col justify-center lg:col-span-7">
-            <p className="mb-3 text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
+            <p className="hero-enter hero-enter-1 mb-3 text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
               AI &amp; Flutter Developer
             </p>
 
-            <h1 className="mb-6 text-4xl font-normal leading-[1.1] tracking-tight text-[var(--foreground)] [text-wrap:balance] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+            <h1 className="hero-enter hero-enter-2 mb-6 text-4xl font-normal leading-[1.1] tracking-tight text-[var(--foreground)] [text-wrap:balance] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
               Building intelligent products and{' '}
               <span className="animated-text-gradient font-serif text-5xl italic sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl">
                 Flutter apps
               </span>
             </h1>
 
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg lg:text-xl">
+            <p className="hero-enter hero-enter-3 mb-8 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg lg:text-xl">
               Hi, I&apos;m <strong className="font-medium text-[var(--foreground)]">Ahmed Abdelgaffar</strong>. I build AI-powered applications and cross-platform Flutter products—from local-first intelligence to mobile apps shipped to real users.
             </p>
 
-            <div className="mb-8 flex flex-wrap items-center gap-3.5">
+            <div className="hero-enter hero-enter-4 mb-8 flex flex-wrap items-center gap-3.5">
               <a
                 href="#void"
                 className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:opacity-90 dark:bg-white dark:text-neutral-900"
@@ -83,7 +83,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenCvStudio }) => {
           </div>
 
           <div className="flex justify-center lg:col-span-5">
-            <div className="w-full max-w-md rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-md transition-all hover:shadow-lg sm:p-8 lg:max-w-none">
+            <div className="hero-enter hero-enter-3 motion-card w-full max-w-md rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-md transition-all hover:shadow-lg sm:p-8 lg:max-w-none">
               <div className="mb-5 flex items-center gap-4 border-b border-[var(--border)] pb-5">
                 <div className="h-18 w-18 shrink-0 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--surface)] sm:h-20 sm:w-20">
                   <img

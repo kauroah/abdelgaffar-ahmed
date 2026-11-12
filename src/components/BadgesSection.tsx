@@ -35,7 +35,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
 
   return (
     <section id="badges" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Clean Header */}
         <div className="text-center mb-12">
@@ -86,7 +86,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
             <div
               key={badge.id}
               onClick={() => onSelectBadge(badge)}
-              className="group rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 flex flex-col justify-between hover:border-[var(--muted)] hover:shadow-md transition-all cursor-pointer shadow-xs"
+              className="motion-card group rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 flex flex-col justify-between hover:border-[var(--muted)] hover:shadow-md transition-all cursor-pointer shadow-xs"
             >
               <div>
                 {/* Header with Badge Image */}

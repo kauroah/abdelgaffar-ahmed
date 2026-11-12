@@ -10,16 +10,37 @@ export const ContactSection: React.FC = () => {
     message: ''
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.message) return;
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const website = new FormData(form).get('website');
+    setIsSending(true);
+    setSubmitError('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, website }),
+      });
+      const result = await response.json() as { message?: string; error?: string };
+      if (!response.ok) {
+        throw new Error(result.error || 'Your message could not be sent. Please try again.');
+      }
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : 'Your message could not be sent. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
     <section id="contact" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Avinash-style Header */}
         <div className="text-center mb-12">
@@ -137,6 +158,7 @@ export const ContactSection: React.FC = () => {
                   <button
                     onClick={() => {
                       setSubmitted(false);
+                      setSubmitError('');
                       setFormData({ name: '', email: '', subject: 'Job Opportunity / Technical Role', message: '' });
                     }}
                     className="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-[var(--foreground)] bg-[var(--surface)] border border-[var(--border)] hover:bg-[var(--surface-hover)] rounded-full transition-colors cursor-pointer"
@@ -149,6 +171,15 @@ export const ContactSection: React.FC = () => {
                   <h3 className="text-xl font-serif font-normal text-[var(--foreground)]">
                     Send a Direct Note
                   </h3>
+                  {submitError && (
+                    <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+                      {submitError}
+                    </p>
+                  )}
+                  <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="contact-website">Leave this field empty</label>
+                    <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -158,6 +189,7 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="text"
                         required
+                        maxLength={100}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Alexey Ivanov"
@@ -172,6 +204,7 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="email"
                         required
+                        maxLength={254}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="alexey@company.com"
@@ -203,6 +236,7 @@ export const ContactSection: React.FC = () => {
                     </label>
                     <textarea
                       required
+                      maxLength={5000}
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -213,10 +247,11 @@ export const ContactSection: React.FC = () => {
 
                   <button
                     type="submit"
+                    disabled={isSending}
                     className="w-full py-3 px-6 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-full hover:opacity-90 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Send Message</span>
+                    <span>{isSending ? 'Sending…' : 'Send Message'}</span>
                   </button>
                 </form>
               )}

@@ -4,7 +4,7 @@ import { PROFILE_DATA } from '../data/portfolioData';
 export const TechStackSection: React.FC = () => {
   return (
     <section id="skills" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Avinash-style Header */}
         <div className="text-center mb-12">
@@ -24,7 +24,7 @@ export const TechStackSection: React.FC = () => {
           {PROFILE_DATA.techMatrix.map((matrix) => (
             <div
               key={matrix.category}
-              className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-sm hover:shadow-md transition-all"
+              className="motion-card rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-sm hover:shadow-md transition-all"
             >
               <h3 className="text-xl font-serif font-normal text-[var(--foreground)] mb-1">
                 {matrix.category}

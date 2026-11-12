@@ -10,7 +10,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onOpenCvStudio }) => {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--background)] text-[var(--muted)] py-12 pb-24 md:pb-12 transition-colors">
-      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 flex flex-col md:flex-row items-center justify-between gap-6">
         
         {/* Brand & Identity with Unique Logo */}
         <div className="flex items-center gap-3">

@@ -25,9 +25,9 @@ export const VoidProjectSection: React.FC = () => {
     <section 
       id="void" 
       aria-label="VOID — Real-Time Voice Assistant"
-      className="w-full bg-[#F7F5F0] text-[#171717] dark:bg-[#121211] dark:text-[#E8E6DF] transition-colors duration-200 py-20 sm:py-28 lg:py-32 border-b border-[#E5E2DA] dark:border-[#242320] overflow-hidden"
+      className="w-full bg-[#F7F5F0] text-[#171717] dark:bg-[var(--background)] dark:text-[#E8E6DF] transition-colors duration-200 py-20 sm:py-28 lg:py-32 border-b border-[#E5E2DA] dark:border-[#242320] overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Header Eyebrow & Large Section Headline */}
         <div className="mb-12 sm:mb-16">

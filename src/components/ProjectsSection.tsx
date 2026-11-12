@@ -22,7 +22,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
 
   return (
     <section id="projects" className="border-t border-[var(--border)] bg-[var(--background)] py-16 md:py-24">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="mb-12 text-center">
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
             EXPLORE MY WORK
@@ -56,7 +56,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
             <article
               key={project.id}
               id={project.id}
-              className="group flex flex-col justify-between rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-sm transition-all hover:shadow-md sm:p-8"
+              className="motion-card group flex flex-col justify-between rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-sm transition-all hover:shadow-md sm:p-8"
             >
               <div>
                 <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] pb-3.5">
