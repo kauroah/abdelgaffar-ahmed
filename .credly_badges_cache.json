@@ -1,0 +1,125 @@
+{
+  "lastSyncTime": 1794480720679,
+  "badges": [
+    {
+      "id": "mongodb-ai-strategy",
+      "title": "AI and Innovation: How MongoDB Enables a Resilient AI Strategy",
+      "issuer": "MongoDB",
+      "category": "Database Architecture",
+      "date": "2026-11-08",
+      "badgeImage": "/assets/aistudio/ai-and-innovation-how-mongodb-enables-a-resilient-a_ca788c97.png",
+      "pdfPath": "/assets/aistudio/AIandInnovationHowMongoDBEnablesaResilientAIStrategy_Badge20261108-20-wvu1ps_a644e4e3.pdf",
+      "verifyUrl": "https://www.credly.com/badges/be72321d-974e-40cb-896a-5200ace81c36",
+      "credentialId": "be72321d-974e-40cb-896a-5200ace81c36",
+      "description": "This skill is for executives or strategic leaders, it reframes AI infrastructure in light of how MongoDB solves many of these issues. Issues such as mangagement of data across multiple tools and diverse data types, both are leading causes for AI projects to fail in practice. The skill discusses how MongoDB solves these issues whilst introducing RAG and AI Agents, two popular techniques used in AI application to highlight how the technology supports these.",
+      "keySkills": [
+        "AI Agents",
+        "Artificial Intelligence (AI)",
+        "Artificial Intelligence Applications",
+        "Data Maintenance",
+        "Data Processing"
+      ],
+      "highlight": true,
+      "isLiveFetched": true
+    },
+    {
+      "id": "mongodb-code-agents",
+      "title": "Building an App with Code Agents and MongoDB",
+      "issuer": "MongoDB",
+      "category": "AI & Generative Models",
+      "date": "2026-11-08",
+      "badgeImage": "/assets/aistudio/building-an-app-with-code-agents-and-mongodb_ac6bcf0a.png",
+      "verifyUrl": "https://www.credly.com/badges/34b7456a-5e2d-4abe-9f68-53b114367457",
+      "credentialId": "34b7456a-5e2d-4abe-9f68-53b114367457",
+      "description": "This digital credentials validates your ability to understand why MongoDB’s flexible document model outperforms SQL for AI workloads. It recognizes your skills to build modern applications using the MongoDB MCP Server and Agent Skills for accelerated design, refactoring, and query pipeline refinement. You have the ability to implement advanced AI capabilities like vector indexes, semantic search, and auto-embeddings while practicing disciplined, well-documented AI-assisted development workflows.",
+      "keySkills": [
+        "Algorithm development",
+        "Artificial Intelligence (AI)",
+        "GenAI",
+        "MongoDB"
+      ],
+      "highlight": false,
+      "isLiveFetched": true
+    },
+    {
+      "id": "mongodb-rag",
+      "title": "Building RAG Apps Using MongoDB",
+      "issuer": "MongoDB",
+      "category": "AI & Generative Models",
+      "date": "2026-11-08",
+      "badgeImage": "/assets/aistudio/building-rag-apps-using-mongodb_6db742c5.png",
+      "pdfPath": "/assets/aistudio/SkillsCert20261108-20-7qqxcp_54238565.pdf",
+      "verifyUrl": "https://www.credly.com/badges/0ca8c49e-ba32-4458-bec8-26c4810ec69f",
+      "credentialId": "0ca8c49e-ba32-4458-bec8-26c4810ec69f",
+      "description": "This digital credential validates your knowledge in building Retrieval-Augmented Generation (RAG) applications with MongoDB. It recognizes your understanding of integrating vector search, optimizing retrieval workflows, and enhancing LLM-powered apps.",
+      "keySkills": [
+        "GenAI",
+        "MongoDB",
+        "RAG"
+      ],
+      "highlight": true,
+      "isLiveFetched": true
+    },
+    {
+      "id": "mongodb-schema-opt",
+      "title": "MongoDB Schema Design Optimization",
+      "issuer": "MongoDB",
+      "category": "Database Architecture",
+      "date": "2026-11-08",
+      "badgeImage": "/assets/aistudio/mongodb-schema-design-optimization-skill-badge_bb9d7b54.png",
+      "pdfPath": "/assets/aistudio/SkillsCert20261108-20-avms7k_599a63e3.pdf",
+      "verifyUrl": "https://www.credly.com/badges/8e30ce61-6851-4b23-87b0-b84a634ffa1f",
+      "credentialId": "8e30ce61-6851-4b23-87b0-b84a634ffa1f",
+      "description": "This digital credential validates your knowledge of optimizing performance by applying schema design patterns like single collection and bucket. It recognizes your understanding of how to refine data models and effectively scale them in sharded clusters.",
+      "keySkills": [
+        "Bucket",
+        "Course Evaluations",
+        "Data Analysis",
+        "Data Literacy",
+        "Data Modeling"
+      ],
+      "highlight": true,
+      "isLiveFetched": true
+    },
+    {
+      "id": "google-gemini-enterprise",
+      "title": "Create Your First Gemini Enterprise Application",
+      "issuer": "Google Cloud",
+      "category": "AI & Generative Models",
+      "date": "2026-11-07",
+      "badgeImage": "/assets/aistudio/create-your-first-gemini-enterprise-application_871c6260.png",
+      "verifyUrl": "https://www.credly.com/badges/ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
+      "credentialId": "ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
+      "description": "Complete the Create Your First Gemini Enterprise Application skill badge to demonstrate skills in the following: deep research agents, multi-agent ideation, and NotebookLM for focused analysis",
+      "keySkills": [
+        "AI Agents",
+        "Enterprise Application",
+        "Gemini",
+        "Gemini Enterprise"
+      ],
+      "highlight": true,
+      "isLiveFetched": true
+    },
+    {
+      "id": "google-ai-studio",
+      "title": "Develop AI-Powered Prototypes in Google AI Studio",
+      "issuer": "Google Cloud",
+      "category": "AI & Generative Models",
+      "date": "2026-11-07",
+      "badgeImage": "/assets/aistudio/develop-ai-powered-prototypes-in-google-ai-studio_0312b366.png",
+      "pdfPath": "/assets/aistudio/DevelopAI-PoweredPrototypesinGoogleAIStudio_Badge20261108-20-39f0j5_e15d90d2.pdf",
+      "verifyUrl": "https://www.credly.com/badges/7a1529b5-52d6-4670-bc49-b1a6741b91c1",
+      "credentialId": "7a1529b5-52d6-4670-bc49-b1a6741b91c1",
+      "description": "Complete the Develop AI-Powered Prototypes in Google AI Studio skill badge to demonstrate your ability to craft effective prompts, leverage multimodal capabilities for image and video analysis, prototype functional AI-driven applications from templates and text prompts, and utilize API keys to build and deploy custom AI solutions.",
+      "keySkills": [
+        "Artificial General Intelligence",
+        "Artificial Intelligence Applications",
+        "Generative AI",
+        "Image Analysis",
+        "Prompt Engineering"
+      ],
+      "highlight": true,
+      "isLiveFetched": true
+    }
+  ]
+}

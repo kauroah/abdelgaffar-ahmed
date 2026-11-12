@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --surface: #f5f5f5;
+  --surface-hover: #e5e5e5;
+  --border: #e2e2e5;
+  --muted: #525252;
+  --card-bg: #ffffff;
+  --card-border: #e2e2e5;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --surface: #141414;
+  --surface-hover: #222222;
+  --border: #262626;
+  --muted: #a3a3a3;
+  --card-bg: #0d0d0e;
+  --card-border: #262626;
+}
+
+@layer base {
+  body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    letter-spacing: 0.015em;
+  }
+  
+  .font-serif {
+    font-family: 'Instrument Serif', Georgia, serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Avinash Singh Signature Animated Text Gradient */
+.animated-text-gradient {
+  background: linear-gradient(135deg, #171717 0%, #737373 50%, #171717 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .animated-text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #a3a3a3 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Floating Dock Icon item */
+.navbar-li {
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--muted);
+}
+
+.navbar-li:hover {
+  background-color: var(--surface-hover);
+  color: var(--foreground);
+  transform: translateY(-2px);
+}
+
+.navbar-li.active {
+  background-color: var(--foreground);
+  color: var(--background);
+}
+
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* ATS Print to PDF Stylesheet */
+@media print {
+  @page {
+    margin: 10mm 14mm;
+    size: A4 portrait;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+  }
+
+  /* Hide everything on screen except the target printable CV container */
+  header, footer, nav, button, .no-print, [aria-label="Close CV studio"], .modal-controls-bar, .floating-dock {
+    display: none !important;
+  }
+
+  /* Unset modal position constraints during print */
+  .cv-modal-overlay {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .cv-modal-card {
+    border: none !important;
+    box-shadow: none !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: transparent !important;
+  }
+
+  #ats-printable-cv {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  #ats-printable-cv h2,
+  #ats-printable-cv > div {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  #ats-printable-cv ul li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
