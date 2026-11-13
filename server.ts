@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -14,7 +15,8 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const CREDLY_USERNAME = 'ahmed-abdelgaffar';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-const CACHE_FILE = path.join(__dirname, '.credly_badges_cache.json');
+const CACHE_DIR = process.env.VERCEL ? os.tmpdir() : __dirname;
+const CACHE_FILE = path.join(CACHE_DIR, '.credly_badges_cache.json');
 
 app.use(express.json());
 
@@ -369,10 +371,12 @@ async function syncCredlyBadges(force = false) {
 }
 
 // Background scheduler: runs every 24 hours
-setInterval(() => {
-  console.log('[Credly Scheduler] 24-hour interval triggered. Refreshing badges...');
-  syncCredlyBadges(true).catch(e => console.error('[Credly Scheduler] Error:', e));
-}, CACHE_TTL_MS);
+if (!process.env.VERCEL) {
+  setInterval(() => {
+    console.log('[Credly Scheduler] 24-hour interval triggered. Refreshing badges...');
+    syncCredlyBadges(true).catch(e => console.error('[Credly Scheduler] Error:', e));
+  }, CACHE_TTL_MS);
+}
 
 // API Endpoints
 app.get('/api/badges', async (req, res) => {
@@ -403,7 +407,7 @@ app.post('/api/badges/sync', async (req, res) => {
 });
 
 // Dual-speaker Voiceover Synthesis for VOID Demo (User: Ahmed + Assistant: VOID / Heisenberg style)
-const VOID_AUDIO_CACHE_DIR = path.join(__dirname, '.void_audio_cache');
+const VOID_AUDIO_CACHE_DIR = path.join(CACHE_DIR, '.void_audio_cache');
 const FISH_HEISENBERG_VOICE_ID = '52fc1dcd125d4ecabef0baf91807cb12';
 
 async function synthesizeFishAudioTurn(text: string, apiKey: string): Promise<{ mimeType: string; buffer: Buffer }> {
@@ -819,4 +823,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  void startServer();
+}
+
+export default app;

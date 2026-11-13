@@ -1,0 +1,5 @@
+node_modules
+.git
+.void_audio_cache
+.credly_badges_cache.json
+test_p38.png

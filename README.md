@@ -69,3 +69,16 @@ npm run start
 - `npm run build`: Compiles TypeScript and creates optimized production assets in `dist/`
 - `npm run start`: Runs the Node server using production assets
 - `npm run lint`: Runs TypeScript validation (`tsc --noEmit`)
+
+## Deploying to Vercel
+
+The Vite frontend is deployed as a static site, and `api/[...path].ts` serves the Express API routes as a Vercel Function. Import the GitHub repository in the Vercel dashboard; the public assets currently total about 180 MB, above the Hobby plan's 100 MB CLI source-upload limit.
+
+1. In Vercel, choose **Add New → Project** and import `kauroah/abdelgaffar-ahmed`.
+2. Keep the detected Vite settings: build command `npm run build`, output directory `dist`.
+3. Add environment variables in **Project Settings → Environment Variables**:
+   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM_NAME`, `SMTP_FROM`, and `CONTACT_EMAIL_TO` for the contact form.
+   - `GEMINI_API_KEY` for generated VOID dialogue audio. `FISH_API_KEY` is optional.
+4. Deploy from the Vercel dashboard. Future pushes to the connected GitHub branch will deploy automatically.
+
+Do not commit production secrets. Credly and audio caches use the function's temporary storage on Vercel, so they are not durable between function instances.
