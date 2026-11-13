@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Send, Phone, MapPin, CheckCircle2 } from 'lucide-react';
+import { Mail, Send, Phone, MapPin, CheckCircle2, Loader2, AlertCircle } from 'lucide-react';
 import { PROFILE_DATA } from '../data/portfolioData';
 
 export const ContactSection: React.FC = () => {
@@ -9,30 +9,33 @@ export const ContactSection: React.FC = () => {
     subject: 'Job Opportunity / Technical Role',
     message: ''
   });
-  const [submitted, setSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
-  const [submitError, setSubmitError] = useState('');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const form = e.currentTarget;
-    const website = new FormData(form).get('website');
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim() || isSending) return;
+
     setIsSending(true);
-    setSubmitError('');
+    setErrorMsg(null);
 
     try {
-      const response = await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, website }),
+        body: JSON.stringify(formData),
       });
-      const result = await response.json() as { message?: string; error?: string };
-      if (!response.ok) {
-        throw new Error(result.error || 'Your message could not be sent. Please try again.');
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        setErrorMsg(data.error || 'Could not send message via SMTP. You can email ahmedabdelhady0246@gmail.com directly.');
+        return;
       }
+
       setSubmitted(true);
-    } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : 'Your message could not be sent. Please try again.');
+    } catch {
+      setErrorMsg('Network error while sending message. Please try again or email ahmedabdelhady0246@gmail.com directly.');
     } finally {
       setIsSending(false);
     }
@@ -40,7 +43,7 @@ export const ContactSection: React.FC = () => {
 
   return (
     <section id="contact" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Avinash-style Header */}
         <div className="text-center mb-12">
@@ -51,7 +54,7 @@ export const ContactSection: React.FC = () => {
             Let's <span className="animated-text-gradient italic">Connect</span>
           </h2>
           <p className="text-sm md:text-base lg:text-lg text-[var(--muted)] max-w-2xl mx-auto mt-3">
-            Open for high-throughput backend roles, mobile system engineering, and technical consultations.
+            Open for Flutter &amp; Applied AI engineering roles, intelligent mobile apps, and voice/RAG systems consultations.
           </p>
         </div>
 
@@ -158,7 +161,6 @@ export const ContactSection: React.FC = () => {
                   <button
                     onClick={() => {
                       setSubmitted(false);
-                      setSubmitError('');
                       setFormData({ name: '', email: '', subject: 'Job Opportunity / Technical Role', message: '' });
                     }}
                     className="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-[var(--foreground)] bg-[var(--surface)] border border-[var(--border)] hover:bg-[var(--surface-hover)] rounded-full transition-colors cursor-pointer"
@@ -171,15 +173,6 @@ export const ContactSection: React.FC = () => {
                   <h3 className="text-xl font-serif font-normal text-[var(--foreground)]">
                     Send a Direct Note
                   </h3>
-                  {submitError && (
-                    <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
-                      {submitError}
-                    </p>
-                  )}
-                  <div className="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                    <label htmlFor="contact-website">Leave this field empty</label>
-                    <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -189,7 +182,6 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="text"
                         required
-                        maxLength={100}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Alexey Ivanov"
@@ -204,7 +196,6 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="email"
                         required
-                        maxLength={254}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="alexey@company.com"
@@ -222,10 +213,10 @@ export const ContactSection: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                       className="w-full px-4 py-2.5 text-xs rounded-xl bg-[var(--surface)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-1 focus:ring-neutral-400"
                     >
-                      <option value="Job Opportunity / Technical Role">Full-Time / Contract Engineering Role</option>
-                      <option value="Distributed Java Architecture">Java / Spring Boot Distributed Project</option>
+                      <option value="Job Opportunity / Technical Role">Flutter &amp; Applied AI Engineering Role</option>
                       <option value="Mobile / Flutter Architecture">Flutter Mobile Application</option>
-                      <option value="AI / RAG Integration">Applied AI / MongoDB RAG Solution</option>
+                      <option value="AI / RAG Integration">Applied AI / Voice Agent / RAG System</option>
+                      <option value="Distributed Java Architecture">Full-Stack / Backend API Collaboration</option>
                       <option value="General Technical Inquiry">Other Collaboration</option>
                     </select>
                   </div>
@@ -236,7 +227,6 @@ export const ContactSection: React.FC = () => {
                     </label>
                     <textarea
                       required
-                      maxLength={5000}
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -245,13 +235,37 @@ export const ContactSection: React.FC = () => {
                     />
                   </div>
 
+                  {errorMsg && (
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-700 dark:text-amber-300 flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                      <div>
+                        <span>{errorMsg}</span>{' '}
+                        <a
+                          href={`mailto:${PROFILE_DATA.contact.secondaryEmail}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(formData.message)}`}
+                          className="underline font-medium"
+                        >
+                          Open in mail app &rarr;
+                        </a>
+                      </div>
+                    </div>
+                  )}
+
                   <button
                     type="submit"
                     disabled={isSending}
-                    className="w-full py-3 px-6 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-full hover:opacity-90 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3 px-6 text-xs font-medium text-white bg-neutral-900 dark:bg-neutral-100 dark:text-neutral-900 rounded-full hover:opacity-90 transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
                   >
-                    <Send className="w-3.5 h-3.5" />
-                    <span>{isSending ? 'Sending…' : 'Send Message'}</span>
+                    {isSending ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <span>Sending via SMTP...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Send Message</span>
+                      </>
+                    )}
                   </button>
                 </form>
               )}

@@ -10,7 +10,7 @@ export interface BadgeItem {
     | 'AI & Design Tools'
     | 'AI in Engineering';
   date: string;
-  badgeImage?: string;
+  badgeImage: string;
   pdfPath?: string;
   verifyUrl: string;
   credentialId?: string;
@@ -91,8 +91,8 @@ export const PROFILE_DATA = {
   firstName: "Ahmed",
   lastName: "Abdelgaffar",
   fullName: "Ahmed Abdelhady Mohamed Abdelgaffar",
-  systemIdentity: "Full-Stack, Distributed Systems & Applied AI Engineer",
-  technicalHeadline: "Architecting high-throughput Java microservices, resilient data layers, and clean-architecture mobile engines.",
+  systemIdentity: "Flutter & Applied AI Systems Engineer",
+  technicalHeadline: "Engineering production Flutter mobile apps, real-time voice agents, and applied AI systems backed by scalable APIs.",
   location: "Moscow, Russia",
   citizenship: "Egypt, Russia (Work permit: Russian Federation)",
   photoUrl: "/assets/aistudio/id_image_with_glasses_c91ad6c5.jpg",
@@ -110,7 +110,7 @@ export const PROFILE_DATA = {
   },
   metrics: [
     { label: "Mobile Render Efficiency", value: "+30%", detail: "Heap allocation & rebuild reduction via BLoC isolation" },
-    { label: "Industry Credentials", value: "13", detail: "6 Credly badges + 7 FreeAcademy AI certificates" },
+    { label: "Industry Credentials", value: "13", detail: "MongoDB, Google Cloud & FreeAcademy AI verified" },
     { label: "App Store Deployments", value: "3", detail: "Apple App Store, Google Play, RuStore releases" },
     { label: "Language Proficiencies", value: "3", detail: "Arabic (Native), English (C1), Russian (C1)" },
   ],
@@ -238,6 +238,7 @@ export const PROFILE_DATA = {
       category: "Programming & Development",
       date: "Nov 13, 2026",
       badgeImage: "/assets/certificates/freeacademy-advanced-python.jpg",
+      pdfPath: "/assets/aistudio/Advanced_Python_Programming_-_Certificate_d990c942.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-APP-PW1QHX",
       credentialId: "FA-2026-APP-PW1QHX",
       description: "Certificate in advanced Python programming, covering language features and practical software development.",
@@ -251,6 +252,7 @@ export const PROFILE_DATA = {
       category: "AI & Generative Models",
       date: "Nov 13, 2026",
       badgeImage: "/assets/certificates/freeacademy-how-llms-work.jpg",
+      pdfPath: "/assets/aistudio/How_LLMs_Work_-_Certificate_3950364a.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MHLW-27M17O",
       credentialId: "FA-2026-MHLW-27M17O",
       description: "Course certificate covering the core concepts behind large language models and how they generate text.",
@@ -264,6 +266,7 @@ export const PROFILE_DATA = {
       category: "AI & Design Tools",
       date: "Nov 12, 2026",
       badgeImage: "/assets/certificates/freeacademy-figma-ai.jpg",
+      pdfPath: "/assets/aistudio/Figma_AI_Features_-_Certificate_43583b8e.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MFAF-JK0NIM",
       credentialId: "FA-2026-MFAF-JK0NIM",
       description: "Course certificate on using Figma AI features to accelerate interface design and prototyping workflows.",
@@ -277,6 +280,7 @@ export const PROFILE_DATA = {
       category: "AI & Design Tools",
       date: "Nov 12, 2026",
       badgeImage: "/assets/certificates/freeacademy-canva-ai.jpg",
+      pdfPath: "/assets/aistudio/Canva_AI_For_Non_Designers_-_Certificate_6bd27ca3.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MCAF-DA1STY",
       credentialId: "FA-2026-MCAF-DA1STY",
       description: "Course certificate on using Canva AI tools to create and refine visual content without a professional design background.",
@@ -290,6 +294,7 @@ export const PROFILE_DATA = {
       category: "Programming & Development",
       date: "Nov 12, 2026",
       badgeImage: "/assets/certificates/freeacademy-debug-code-ai.jpg",
+      pdfPath: "/assets/aistudio/Debug_Code_With_AI_-_Certificate_e4edea94.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MDCW-L9E6KS",
       credentialId: "FA-2026-MDCW-L9E6KS",
       description: "Course certificate on applying AI tools to investigate software defects and support debugging workflows.",
@@ -303,6 +308,7 @@ export const PROFILE_DATA = {
       category: "AI in Engineering",
       date: "Nov 12, 2026",
       badgeImage: "/assets/certificates/freeacademy-aerospace-ai.jpg",
+      pdfPath: "/assets/aistudio/AI_For_Aerospace_Mechanical_Engineers_-_Certificate_bf095b4b.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-AFAM-79GNLW",
       credentialId: "FA-2026-AFAM-79GNLW",
       description: "Course certificate exploring applications of artificial intelligence in aerospace and mechanical engineering contexts.",
@@ -316,6 +322,7 @@ export const PROFILE_DATA = {
       category: "AI & Generative Models",
       date: "Nov 08, 2026",
       badgeImage: "/assets/certificates/freeacademy-prompt-engineering.jpg",
+      pdfPath: "/assets/aistudio/Prompt_Engineering_-_Certificate_b1c5d7d4.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-PE-AOE5VO",
       credentialId: "FA-2026-PE-AOE5VO",
       description: "Course certificate in writing and refining prompts for clearer, more useful outputs from generative AI systems.",
@@ -378,45 +385,14 @@ export const PROFILE_DATA = {
     }
   ] as EcosystemNode[],
 
-  // Architectural Case Studies & System Design Overviews
+  // Architectural Case Studies & System Design Overviews (Flutter & AI prioritized first)
   caseStudies: [
-    {
-      id: "case-distributed-orchestrator",
-      title: "Distributed Background Job Engine & Task Orchestrator",
-      category: "Distributed Systems",
-      domain: "High-Load Infrastructure / Asynchronous Computing",
-      role: "Backend Systems Architect",
-      architecturePattern: "Distributed Worker Pool with Distributed Lock Coordination & State Recovery",
-      problemStatement: "Orchestrating long-running computational jobs, cron-scheduled operations, and large data batches across distributed nodes caused duplicate execution hazards during network partitions, and unhandled container restarts led to orphaned incomplete jobs.",
-      systemDecisions: [
-        "Implemented distributed lock coordination via Redis key leases with automatic TTL refresh, paired with unique database constraints on (job_id, execution_id) to guarantee idempotency across multiple worker nodes.",
-        "Engineered an asynchronous worker dispatch engine using Java 21 CompletableFuture and bounded ThreadPoolExecutor, decoupling HTTP intake from heavy CPU tasks.",
-        "Constructed a persistent PostgreSQL state machine tracking job stages (SUBMITTED, RUNNING, COMPLETED, FAILED, RETRYING) that automatically identifies and restarts interrupted jobs upon container lifecycle reboot.",
-        "Deployed RabbitMQ with dedicated Dead Letter Exchanges (DLX) and exponential backoff retry intervals to handle transient downstream failures without blocking the main worker queue."
-      ],
-      concurrencyAndConsistency: "Guaranteed exactly-once business execution semantics using Redis Redlock distributed synchronization combined with database row-level locking. Thread pool backpressure enforced via fixed-size queue capacity rejecting overflow with HTTP 429.",
-      technologies: ["Java 21", "Spring Boot 3", "Spring Batch", "RabbitMQ", "Redis", "PostgreSQL", "Docker", "Prometheus", "Micrometer", "Testcontainers"],
-      benchmarkedMetrics: [
-        { metric: "Duplicate Execution Rate", impact: "0%", baselineComparison: "Eliminated race condition duplicates across 5 horizontal nodes" },
-        { metric: "Task State Recovery", impact: "100%", baselineComparison: "Zero task loss during forced container SIGTERM termination" },
-        { metric: "Mean Time to Detect (MTTD)", impact: "-40%", baselineComparison: "Queue backlog telemetry exposed via Micrometer & Prometheus" },
-      ],
-      links: {
-        github: "https://github.com/kauroah"
-      },
-      icon: "/assets/images/orch_logo_1794319504623.jpg",
-      screenshots: [
-        { url: "/assets/images/orch_screen1_telemetry_1794338673598.jpg", caption: "Cluster Telemetry — Node Pool Status & Concurrency" },
-        { url: "/assets/images/orch_screen2_dag_1794338698592.jpg", caption: "DAG State Machine — Execution Pipeline & Trace Logs" },
-        { url: "/assets/images/orch_screen3_dlx_1794338699326.jpg", caption: "Queue & DLX Engine — Dead Letter Exchange Backpressure" }
-      ]
-    },
     {
       id: "case-founders-mobile",
       title: "Founders — Social Network & Syndicate Deal-Flow Platform",
       category: "Mobile Architecture",
       domain: "Venture Capital & Entrepreneur Social Network",
-      role: "Lead Mobile Architect & Full-Stack Engineer",
+      role: "Lead Flutter Architect & Full-Stack Engineer",
       architecturePattern: "Clean Architecture (Domain/Data/Presentation) with Reactive BLoC State Management",
       problemStatement: "Entrepreneurs and international syndicate investors require vetted partnerships and deal syndication without spam or unqualified cold outreach, while requiring strict pre-registration KYC screening, encrypted anonymity options, and high-performance mobile deal-flow synchronization.",
       systemDecisions: [
@@ -448,7 +424,7 @@ export const PROFILE_DATA = {
       title: "PneumoAI — Medical Image Inference & Diagnostic Platform",
       category: "Applied AI / RAG",
       domain: "Healthcare Technology / Clinical Radiographic Intelligence",
-      role: "Full-Stack & Applied AI Engineer (Bachelor's Thesis, KFU)",
+      role: "Applied AI & Full-Stack Engineer (Bachelor's Thesis, KFU)",
       architecturePattern: "DenseNet121 ONNX Inference + Grad-CAM XAI + CURB-65 Risk Stratification + Offline Qwen-2.5-7B (Ollama)",
       problemStatement: "Early-stage pneumonia detection on chest radiographs presents diagnostic ambiguity under clinical workloads, risks critical false negatives, and requires explainable anatomical localization and physiological severity scoring without leaking sensitive patient data to external clouds.",
       systemDecisions: [
@@ -484,8 +460,8 @@ export const PROFILE_DATA = {
       title: "Adam & Eve — Production Mobile Commerce Platform",
       category: "Mobile Architecture",
       domain: "Commercial Food Service / Multi-Platform Mobile",
-      role: "Full-Stack Mobile Engineer",
-      architecturePattern: "Multi-Platform Client with Node.js Backend & Payment Gateway Integration",
+      role: "Flutter & Full-Stack Mobile Engineer",
+      architecturePattern: "Multi-Platform Flutter Client with Node.js Backend & Payment Gateway Integration",
       problemStatement: "Launching a multi-store bakery ordering and delivery tracking service required simultaneously compliant releases on Apple App Store, Google Play, and RuStore, coupled with transactional order placement.",
       systemDecisions: [
         "Engineered cross-platform Flutter application maintaining unified codebase compliance for Apple App Store, Google Play, and RuStore guidelines.",
@@ -513,6 +489,37 @@ export const PROFILE_DATA = {
         { url: "/assets/projects/adam-and-eve/screenshot-3.png", caption: "Cart Management & Express Pickup Order" },
         { url: "/assets/projects/adam-and-eve/screenshot-4.png", caption: "Special Offers, Promos & Discounts" },
         { url: "/assets/projects/adam-and-eve/screenshot-5.png", caption: "Bonus Points Loyalty Program" }
+      ]
+    },
+    {
+      id: "case-distributed-orchestrator",
+      title: "Distributed Background Job Engine & Task Orchestrator",
+      category: "Distributed Systems",
+      domain: "High-Load Infrastructure / Asynchronous Computing",
+      role: "Backend Systems Architect",
+      architecturePattern: "Distributed Worker Pool with Distributed Lock Coordination & State Recovery",
+      problemStatement: "Orchestrating long-running computational jobs, cron-scheduled operations, and large data batches across distributed nodes caused duplicate execution hazards during network partitions, and unhandled container restarts led to orphaned incomplete jobs.",
+      systemDecisions: [
+        "Implemented distributed lock coordination via Redis key leases with automatic TTL refresh, paired with unique database constraints on (job_id, execution_id) to guarantee idempotency across multiple worker nodes.",
+        "Engineered an asynchronous worker dispatch engine using Java 21 CompletableFuture and bounded ThreadPoolExecutor, decoupling HTTP intake from heavy CPU tasks.",
+        "Constructed a persistent PostgreSQL state machine tracking job stages (SUBMITTED, RUNNING, COMPLETED, FAILED, RETRYING) that automatically identifies and restarts interrupted jobs upon container lifecycle reboot.",
+        "Deployed RabbitMQ with dedicated Dead Letter Exchanges (DLX) and exponential backoff retry intervals to handle transient downstream failures without blocking the main worker queue."
+      ],
+      concurrencyAndConsistency: "Guaranteed exactly-once business execution semantics using Redis Redlock distributed synchronization combined with database row-level locking. Thread pool backpressure enforced via fixed-size queue capacity rejecting overflow with HTTP 429.",
+      technologies: ["Java 21", "Spring Boot 3", "Spring Batch", "RabbitMQ", "Redis", "PostgreSQL", "Docker", "Prometheus", "Micrometer", "Testcontainers"],
+      benchmarkedMetrics: [
+        { metric: "Duplicate Execution Rate", impact: "0%", baselineComparison: "Eliminated race condition duplicates across 5 horizontal nodes" },
+        { metric: "Task State Recovery", impact: "100%", baselineComparison: "Zero task loss during forced container SIGTERM termination" },
+        { metric: "Mean Time to Detect (MTTD)", impact: "-40%", baselineComparison: "Queue backlog telemetry exposed via Micrometer & Prometheus" },
+      ],
+      links: {
+        github: "https://github.com/kauroah"
+      },
+      icon: "/assets/images/orch_logo_1794319504623.jpg",
+      screenshots: [
+        { url: "/assets/images/orch_screen1_telemetry_1794338673598.jpg", caption: "Cluster Telemetry — Node Pool Status & Concurrency" },
+        { url: "/assets/images/orch_screen2_dag_1794338698592.jpg", caption: "DAG State Machine — Execution Pipeline & Trace Logs" },
+        { url: "/assets/images/orch_screen3_dlx_1794338699326.jpg", caption: "Queue & DLX Engine — Dead Letter Exchange Backpressure" }
       ]
     },
     {
@@ -683,52 +690,52 @@ export const PROFILE_DATA = {
     }
   ] as ExperienceItem[],
 
-  // Clean, categorized technical matrix
+  // Clean, categorized technical matrix (Flutter & Applied AI prioritized first)
   techMatrix: [
     {
-      category: "Backend & Distributed Systems",
-      description: "Concurrent workflows, asynchronous messaging, and fault-tolerant service decomposition.",
+      category: "Flutter & Mobile Architecture",
+      description: "Production cross-platform apps, state isolation, and native store deployments.",
       technologies: [
-        { name: "Java 21", role: "Core backend language; Virtual Threads, CompletableFuture concurrency, modern standard library." },
-        { name: "Spring Boot 3", role: "Application framework; Spring Batch, Spring Data JPA, Spring Security, REST controllers." },
-        { name: "Apache Kafka", role: "Distributed append-only event broker; Transactional Outbox publishing, Dead Letter Topics." },
-        { name: "RabbitMQ", role: "Asynchronous task queue; worker distribution, backpressure control, message TTL." },
-        { name: "Node.js & Express", role: "High-throughput asynchronous I/O APIs; routing, middleware, payload serialization." },
-        { name: "Spring Security & OAuth2", role: "Identity and authorization; Spring Authorization Server, JWT validation, RBAC filters." }
+        { name: "Flutter SDK & Dart", role: "Cross-platform mobile apps for iOS & Android; custom render pipelines & native store releases." },
+        { name: "BLoC & Cubit", role: "Predictable unidirectional state flow; RxDart debouncing, +30% render performance." },
+        { name: "Clean Architecture", role: "Strict Domain, Data, and Presentation separation with testable use cases." },
+        { name: "Firebase & Push (FCM)", role: "Firestore real-time deal rooms, auth, and transactional order push notifications." },
+        { name: "App Store Publishing", role: "Verified production releases on Apple App Store, Google Play, and RuStore." },
+        { name: "TypeScript & Next.js 15", role: "Type-safe full-stack client interfaces, Tailwind CSS, and component modularity." }
       ]
     },
     {
-      category: "Mobile & Client Architecture",
-      description: "State-isolated mobile platforms and reactive web client applications.",
+      category: "Applied AI, Voice & LLM Systems",
+      description: "Real-time voice orchestration, RAG retrieval, and on-device model inference.",
       technologies: [
-        { name: "Flutter SDK & Dart", role: "Cross-platform mobile compilation for iOS and Android; custom render pipelines." },
-        { name: "BLoC & Cubit", role: "Predictable unidirectional state flow; event debouncing, presentation/logic decoupling." },
-        { name: "Clean Architecture", role: "Strict multi-tier architecture separating Domain, Data, and Presentation layers." },
-        { name: "TypeScript & React 19", role: "Type-safe client interfaces; Next.js 15 App Router, streaming SSR, component modularity." },
-        { name: "App Store Publishing", role: "Binary code signing, release lifecycle, and publishing on App Store, Google Play, RuStore." }
+        { name: "Gemini API & Google AI Studio", role: "Certified: multimodal prompting, structured schemas, function calling, and dual-voice TTS." },
+        { name: "Real-Time Voice Agents (VOID)", role: "Full-duplex VAD intake, deterministic barge-in cancel, and tool-execution routing." },
+        { name: "MongoDB RAG & Vector Search", role: "Certified: semantic chunking, vector embeddings, and context-window injection." },
+        { name: "ONNX Runtime & Grad-CAM", role: "CPU-quantized DenseNet121 inference (<3s) and explainable heatmap localization." },
+        { name: "Offline LLMs & Prompting", role: "Local Qwen-2.5-7B via Ollama, instruction design, and AI-assisted code agents." },
+        { name: "Python & ML Tooling", role: "Certified: OOP, TensorFlow/Keras export, and data preprocessing pipelines." }
       ]
     },
     {
       category: "Databases, Vector Stores & Caching",
-      description: "ACID transactions, document models, vector similarity indexing, and distributed in-memory tiers.",
+      description: "Relational integrity, vector similarity indexing, and distributed in-memory state.",
       technologies: [
-        { name: "PostgreSQL & PostGIS", role: "Relational persistence, geometric spatial indexes, row-level locking, ACID transactions." },
-        { name: "MongoDB & Atlas Vector", role: "Document persistence, schema design patterns, aggregation pipelines, RAG vector search." },
-        { name: "Redis", role: "In-memory caching, distributed lock coordination (Redlock), token revocation blacklisting." },
-        { name: "Firebase Firestore", role: "Real-time document listeners, offline synchronization, mobile client security rules." },
-        { name: "Prisma & Hibernate", role: "Type-safe ORM query generation, schema migrations, relational mapping." }
+        { name: "MongoDB & Atlas Vector", role: "Certified: schema optimization, aggregation pipelines, and RAG vector search." },
+        { name: "PostgreSQL & PostGIS", role: "ACID transactions, geospatial spatial indexing, and row-level concurrency locks." },
+        { name: "Redis", role: "Distributed Redlock coordination, L2 caching, and sub-millisecond token blacklisting." },
+        { name: "Firebase Firestore", role: "Real-time mobile document listeners, offline sync, and strict security rules." },
+        { name: "Prisma & Hibernate", role: "Type-safe schema migrations, query profiling, and relational mapping." }
       ]
     },
     {
-      category: "AI Systems, DevOps & Testing",
-      description: "Applied generative AI models, containerized testbeds, and production monitoring.",
+      category: "Backend APIs & Infrastructure",
+      description: "Supporting server APIs, event brokers, containerization, and verification harnesses.",
       technologies: [
-        { name: "Google AI Studio & Gemini", role: "Certified skill badge: Multimodal prompting, structured output schemas, function calling." },
-        { name: "MongoDB RAG Architecture", role: "Certified skill badge: Chunking strategies, semantic embeddings, vector context injection." },
-        { name: "ONNX Runtime", role: "High-efficiency model inference on CPU/GPU without heavy runtime framework bloat." },
-        { name: "Docker & Docker Compose", role: "Multi-stage containerization, reproducible test topologies, microservice deployment." },
-        { name: "Testcontainers & JUnit 5", role: "Automated integration testing against ephemeral PostgreSQL and broker containers." },
-        { name: "Micrometer & Prometheus", role: "Application performance monitoring, queue backlog scraping, latency timers." }
+        { name: "Node.js & Express", role: "High-throughput APIs, webhooks, SSE/streaming audio routes, and commerce backends." },
+        { name: "Java 21 & Spring Boot 3", role: "Enterprise microservices, Spring Security (OAuth 2.0 / OIDC), and Spring Batch." },
+        { name: "Apache Kafka & RabbitMQ", role: "Transactional Outbox event streaming, worker pools, and Dead Letter Topics." },
+        { name: "Docker & Docker Compose", role: "Multi-stage containerization and reproducible full-stack deployments." },
+        { name: "Testcontainers & Prometheus", role: "Automated integration testbeds and queue/latency observability metrics." }
       ]
     }
   ]

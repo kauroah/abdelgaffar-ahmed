@@ -1,5 +1,6 @@
 import React from 'react';
-import { Award, FileText, Github, MapPin, Send } from 'lucide-react';
+import { ArrowRight, FileText, Github, Send, ExternalLink, Award, MapPin } from 'lucide-react';
+import { motion, useReducedMotion } from 'motion/react';
 import { PROFILE_DATA } from '../data/portfolioData';
 import { Logo } from './Logo';
 
@@ -9,115 +10,169 @@ interface HeroProps {
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenCvStudio }) => {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
-    <section id="home" className="relative border-b border-[var(--border)] bg-[var(--background)] pb-14 pt-3 md:pb-24 md:pt-4">
-      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-        <div className="mb-8 flex items-center justify-between border-b border-[var(--border)] py-2.5 sm:mb-12 sm:py-3">
-          <Logo size="md" showLabel />
+    <section id="home" className="relative pt-3 pb-14 md:pt-4 md:pb-24 border-b border-[var(--border)] bg-[var(--background)]">
+      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        
+        {/* Sleek, Compact Top Brand Header */}
+        <div className="flex items-center justify-between py-2.5 sm:py-3 mb-8 md:mb-12 border-b border-[var(--border)]">
+          <Logo size="md" showLabel={true} />
           <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500" />
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
             <span className="text-[11px] sm:text-xs">Available for opportunities</span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14 xl:gap-16">
-          <div className="flex flex-col justify-center lg:col-span-7">
-            <p className="hero-enter hero-enter-1 mb-3 text-xs font-medium uppercase tracking-widest text-[var(--muted)]">
-              AI &amp; Flutter Developer
+        {/* Main 2-Column Intro Split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-16 items-center">
+          
+          {/* Left Column: Headline & Bio */}
+          <motion.div
+            className="lg:col-span-7 xl:col-span-7 flex flex-col justify-center"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: 'easeOut' }}
+          >
+            
+            <p className="text-xs uppercase tracking-widest text-[var(--muted)] font-medium mb-3">
+              Flutter &amp; Applied AI Engineer
             </p>
 
-            <h1 className="hero-enter hero-enter-2 mb-6 text-4xl font-normal leading-[1.1] tracking-tight text-[var(--foreground)] [text-wrap:balance] sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
-              Building intelligent products and{' '}
-              <span className="animated-text-gradient font-serif text-5xl italic sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl">
-                Flutter apps
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-normal tracking-tight text-[var(--foreground)] leading-[1.1] mb-6 [text-wrap:balance]">
+              Building intelligent products with{' '}
+              <span className="font-serif italic animated-text-gradient text-5xl sm:text-6xl md:text-7xl lg:text-7xl xl:text-8xl">
+                Flutter &amp; Applied AI
               </span>
             </h1>
 
-            <p className="hero-enter hero-enter-3 mb-8 max-w-2xl text-base leading-relaxed text-[var(--muted)] sm:text-lg lg:text-xl">
-              Hi, I&apos;m <strong className="font-medium text-[var(--foreground)]">Ahmed Abdelgaffar</strong>. I build AI-powered applications and cross-platform Flutter products—from local-first intelligence to mobile apps shipped to real users.
+            <p className="text-base sm:text-lg lg:text-xl text-[var(--muted)] leading-relaxed mb-8 max-w-2xl">
+              Hi, I'm <strong className="text-[var(--foreground)] font-medium">Ahmed Abdelgaffar</strong>. I specialize in shipping production <strong className="text-[var(--foreground)] font-medium">Flutter</strong> mobile apps (App Store, Google Play &amp; RuStore) and <strong className="text-[var(--foreground)] font-medium">Applied AI</strong> systems—from real-time voice agents and ONNX medical inference to RAG pipelines—backed by scalable TypeScript and Java APIs.
             </p>
 
-            <div className="hero-enter hero-enter-4 mb-8 flex flex-wrap items-center gap-3.5">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3.5 mb-8">
               <a
-                href="#void"
-                className="rounded-full bg-neutral-900 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:opacity-90 dark:bg-white dark:text-neutral-900"
+                href="#projects"
+                className="px-6 py-2.5 text-sm font-medium rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900 hover:opacity-90 transition-all shadow-sm"
               >
-                AI projects
+                View Projects
               </a>
-              <a
-                href="#case-founders-mobile"
-                className="rounded-full border border-[var(--border)] bg-[var(--card-bg)] px-6 py-2.5 text-sm font-medium text-[var(--foreground)] transition-all hover:bg-[var(--surface-hover)]"
-              >
-                Flutter apps
-              </a>
+
               <button
                 onClick={onOpenCvStudio}
-                className="flex cursor-pointer items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--card-bg)] px-6 py-2.5 text-sm font-medium text-[var(--foreground)] transition-all hover:bg-[var(--surface-hover)]"
+                className="px-6 py-2.5 text-sm font-medium rounded-full border border-[var(--border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--surface-hover)] transition-all cursor-pointer flex items-center gap-2"
               >
-                <FileText className="h-4 w-4" />
+                <FileText className="w-4 h-4" />
                 <span>Resume / CV</span>
               </button>
-              <a href="#contact" className="px-4 py-2.5 text-sm text-[var(--muted)] transition-colors hover:text-[var(--foreground)]">
+
+              <a
+                href="#contact"
+                className="px-4 py-2.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
+              >
                 Contact Me
               </a>
             </div>
 
+            {/* Direct Social Links */}
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 text-xs text-[var(--muted)]">
-              <a href={PROFILE_DATA.contact.githubUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors hover:text-[var(--foreground)]">
-                <Github className="h-3.5 w-3.5" />
+              <a
+                href={PROFILE_DATA.contact.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+              >
+                <Github className="w-3.5 h-3.5" />
                 <span>GitHub</span>
               </a>
-              <a href={PROFILE_DATA.contact.telegramUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors hover:text-[var(--foreground)]">
-                <Send className="h-3.5 w-3.5 text-sky-500" />
+
+              <a
+                href={PROFILE_DATA.contact.telegramUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+              >
+                <Send className="w-3.5 h-3.5 text-sky-500" />
                 <span>Telegram</span>
               </a>
-              <a href={PROFILE_DATA.contact.credlyUrl} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 transition-colors hover:text-[var(--foreground)]">
-                <Award className="h-3.5 w-3.5 text-emerald-500" />
+
+              <a
+                href={PROFILE_DATA.contact.credlyUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[var(--foreground)] transition-colors flex items-center gap-1.5"
+              >
+                <Award className="w-3.5 h-3.5 text-emerald-500" />
                 <span>Credly (6 Badges)</span>
               </a>
+
               <div className="flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-[var(--muted)]" />
+                <MapPin className="w-3.5 h-3.5 text-[var(--muted)]" />
                 <span>{PROFILE_DATA.location}</span>
               </div>
             </div>
-          </div>
 
-          <div className="flex justify-center lg:col-span-5">
-            <div className="hero-enter hero-enter-3 motion-card w-full max-w-md rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 shadow-md transition-all hover:shadow-lg sm:p-8 lg:max-w-none">
-              <div className="mb-5 flex items-center gap-4 border-b border-[var(--border)] pb-5">
-                <div className="h-18 w-18 shrink-0 overflow-hidden rounded-full border border-[var(--border)] bg-[var(--surface)] sm:h-20 sm:w-20">
+          </motion.div>
+
+          {/* Right Column: Clean Profile Card */}
+          <motion.div
+            className="lg:col-span-5 xl:col-span-5 flex justify-center"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: prefersReducedMotion ? 0 : 0.12, ease: 'easeOut' }}
+          >
+            <div className="w-full max-w-md lg:max-w-none rounded-3xl border border-[var(--border)] bg-[var(--card-bg)] p-6 sm:p-8 shadow-md hover:shadow-lg transition-all">
+              
+              <div className="flex items-center gap-4 mb-5 pb-5 border-b border-[var(--border)]">
+                <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full overflow-hidden border border-[var(--border)] bg-[var(--surface)] shrink-0">
                   <img
                     src={PROFILE_DATA.photoUrl}
                     alt="Ahmed Abdelgaffar portrait"
                     referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover object-top"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
+
                 <div>
-                  <h3 className="font-serif text-xl font-normal text-[var(--foreground)] sm:text-2xl">Ahmed Abdelgaffar</h3>
-                  <p className="mt-0.5 text-xs text-[var(--muted)]">Software Engineer</p>
-                  <p className="mt-0.5 font-mono text-xs text-[var(--muted)]">{PROFILE_DATA.contact.email}</p>
+                  <h3 className="text-xl sm:text-2xl font-serif font-normal text-[var(--foreground)]">
+                    Ahmed Abdelgaffar
+                  </h3>
+                  <p className="text-xs text-[var(--muted)] mt-0.5">
+                    Software Engineer
+                  </p>
+                  <p className="text-xs text-[var(--muted)] font-mono mt-0.5">
+                    {PROFILE_DATA.contact.email}
+                  </p>
                 </div>
               </div>
 
+              {/* Education Summary */}
               <div className="space-y-2.5 text-xs text-[var(--foreground)]">
-                <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5">
-                  <span className="font-medium text-[var(--foreground)]">Master&apos;s (2026–2028):</span>
-                  <div className="mt-0.5 leading-relaxed text-[var(--muted)]">RTU MIREA · Information Systems Architecture</div>
+                <div className="p-3.5 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                  <span className="font-medium text-[var(--foreground)]">Master's (2026–2028):</span>
+                  <div className="text-[var(--muted)] mt-0.5 leading-relaxed">RTU MIREA · Information Systems Architecture</div>
                 </div>
-                <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3.5">
-                  <span className="font-medium text-[var(--foreground)]">Bachelor&apos;s (2022–2026):</span>
-                  <div className="mt-0.5 leading-relaxed text-[var(--muted)]">Kazan Federal Univ · Software Engineering (ITIS)</div>
+
+                <div className="p-3.5 rounded-2xl bg-[var(--surface)] border border-[var(--border)]">
+                  <span className="font-medium text-[var(--foreground)]">Bachelor's (2022–2026):</span>
+                  <div className="text-[var(--muted)] mt-0.5 leading-relaxed">Kazan Federal Univ · Software Engineering (ITIS)</div>
                 </div>
               </div>
 
-              <div className="mt-5 flex items-center justify-between border-t border-[var(--border)] pt-4 text-xs text-[var(--muted)]">
-                <span>Core: Java · Next.js · Flutter</span>
-                <a href="#about" className="font-medium text-indigo-600 hover:underline dark:text-indigo-400">More About Me →</a>
+              <div className="mt-5 pt-4 border-t border-[var(--border)] flex items-center justify-between text-xs text-[var(--muted)]">
+                <span>Core: Flutter · Applied AI · TypeScript</span>
+                <a href="#about" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                  More About Me &rarr;
+                </a>
               </div>
+
             </div>
-          </div>
+          </motion.div>
+
         </div>
+
       </div>
     </section>
   );

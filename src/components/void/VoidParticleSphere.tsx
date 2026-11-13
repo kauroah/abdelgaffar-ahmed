@@ -1,53 +1,68 @@
 import React, { useEffect, useRef } from 'react';
 
+export type VoidSphereState = 'idle' | 'user' | 'thinking' | 'assistant' | 'barge-in';
+
 interface VoidParticleSphereProps {
   isSpeaking?: boolean;
-  intensity?: number; // 0.0 to 1.0 multiplier
+  speakerState?: VoidSphereState;
+  /** Optional real-time normalized audio energy (0..1) from Web Audio AnalyserNode */
+  externalEnergyRef?: React.MutableRefObject<number>;
+  intensity?: number;
   className?: string;
   onAudioEnergy?: (energy: number) => void;
 }
 
 interface Particle3D {
-  // Base spherical coordinates
   baseX: number;
   baseY: number;
   baseZ: number;
-  theta: number; // azimuthal angle
-  phi: number;   // polar angle
+  theta: number;
+  phi: number;
   radiusOffset: number;
   speedMultiplier: number;
   noiseSeed: number;
 }
 
 export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
-  isSpeaking = true,
+  isSpeaking = false,
+  speakerState = 'idle',
+  externalEnergyRef,
   intensity = 1.0,
-  className = "",
+  className = '',
   onAudioEnergy,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animFrameIdRef = useRef<number | null>(null);
   const particlesRef = useRef<Particle3D[]>([]);
 
-  // Speech cadence & voice waveform simulation state
+  // Keep latest props in refs so animation loop doesn't recreate on state transitions
+  const statePropsRef = useRef({
+    isSpeaking,
+    speakerState,
+    intensity,
+    onAudioEnergy,
+  });
+  statePropsRef.current = { isSpeaking, speakerState, intensity, onAudioEnergy };
+
   const voiceStateRef = useRef({
-    currentEnergy: 0.25,
-    targetEnergy: 0.25,
+    currentEnergy: 0.2,
+    targetEnergy: 0.2,
     speechTimer: 0,
     burstDuration: 1.2,
     isSyllableActive: true,
-    cadencePhase: 0,
-    vocalTractFreq: 3.5, // 3.5 Hz speech rate
+    vocalTractFreq: 3.6,
+    bargePulse: 0,
+    prevSpeakerState: 'idle' as VoidSphereState,
   });
 
   useEffect(() => {
-    // Generate ~1,800 particles distributed evenly on a unit sphere using the Fibonacci lattice
+    // Generate 1,800 particles distributed evenly on a unit sphere via Fibonacci lattice
     const particleCount = 1800;
-    const goldenAngle = Math.PI * (3 - Math.sqrt(5)); // ~2.39996323 radians
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
     const particles: Particle3D[] = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const y = 1 - (i / (particleCount - 1)) * 2; // from 1 to -1
+      const y = 1 - (i / (particleCount - 1)) * 2;
       const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
       const theta = goldenAngle * i;
 
@@ -81,11 +96,10 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
     let height = 0;
     let dpr = 1;
 
-    // Handle high DPI displays and responsive resizing
     const updateSize = () => {
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for optimal 60fps performance
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = rect.width;
       height = rect.height;
       canvas.width = Math.floor(width * dpr);
@@ -93,17 +107,14 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
     };
 
     updateSize();
-    const resizeObserver = new ResizeObserver(() => {
-      updateSize();
-    });
+    const resizeObserver = new ResizeObserver(updateSize);
     resizeObserver.observe(canvas);
 
     let lastTime = performance.now();
     let rotY = 0;
-    let rotX = 0.15;
+    let rotX = 0.16;
     let speechClock = 0;
 
-    // Check user motion preferences
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const render = (time: number) => {
@@ -115,76 +126,90 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
         return;
       }
 
-      // Clear canvas with deep dark background
+      const {
+        isSpeaking: activeSpeak,
+        speakerState: role,
+        intensity: currentIntensity,
+        onAudioEnergy: reportEnergy,
+      } = statePropsRef.current;
+
       ctx.save();
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, width, height);
 
-      // Simulate natural human voice speech dynamics:
-      // Voice consists of:
-      // 1. Sentence / phrase bursts (1.5 - 3 seconds of talking)
-      // 2. Breath pauses (300 - 500 ms)
-      // 3. Syllable rhythms (3 - 5 Hz envelope variations)
-      // 4. Formant micro-jitters (12 - 20 Hz high-frequency vocal flutter)
       const vs = voiceStateRef.current;
       speechClock += dt;
 
-      if (isSpeaking) {
-        // Active speaking state
+      // Trigger crisp shock-contraction when entering barge-in state
+      if (role === 'barge-in' && vs.prevSpeakerState !== 'barge-in') {
+        vs.bargePulse = 1.0;
+      }
+      vs.prevSpeakerState = role;
+      vs.bargePulse = Math.max(0, vs.bargePulse - dt * 2.8);
+
+      // Use real Web Audio FFT energy when available (> 0.02), otherwise run natural speech cadence
+      const liveExternalEnergy = externalEnergyRef?.current ?? 0;
+
+      if (role === 'thinking') {
+        // Coherent rhythmic pulse while orchestrating tools
+        vs.targetEnergy = 0.28 + Math.sin(speechClock * 6.5) * 0.08;
+      } else if (liveExternalEnergy > 0.015) {
+        vs.targetEnergy = Math.min(1.0, liveExternalEnergy * 1.35 * currentIntensity);
+      } else if (activeSpeak || role === 'user' || role === 'assistant' || role === 'barge-in') {
         vs.speechTimer += dt;
         if (vs.speechTimer > vs.burstDuration) {
           vs.speechTimer = 0;
-          // Toggle between active phrase utterance and micro-breath pause
           if (vs.isSyllableActive) {
-            // Take a short breath pause
             vs.isSyllableActive = false;
-            vs.burstDuration = 0.25 + Math.random() * 0.35;
-            vs.targetEnergy = 0.15 + Math.random() * 0.1;
+            vs.burstDuration = 0.18 + Math.random() * 0.25;
+            vs.targetEnergy = 0.18 + Math.random() * 0.08;
           } else {
-            // Start a new speech sentence
             vs.isSyllableActive = true;
-            vs.burstDuration = 1.6 + Math.random() * 2.2;
-            vs.vocalTractFreq = 3.2 + Math.random() * 1.5;
+            vs.burstDuration = 1.3 + Math.random() * 1.9;
+            vs.vocalTractFreq = role === 'user' ? 3.1 + Math.random() * 1.1 : 3.8 + Math.random() * 1.4;
           }
         }
 
         if (vs.isSyllableActive) {
-          // Syllable oscillation (speech cadence)
           const syllableWave = Math.sin(speechClock * vs.vocalTractFreq * Math.PI * 2);
-          const emphasisWave = Math.sin(speechClock * 1.2);
-          const formantJitter = (Math.sin(speechClock * 24.0) + Math.cos(speechClock * 16.0)) * 0.08;
-
-          const rawEnergy = 0.5 + 0.35 * syllableWave * (0.6 + 0.4 * emphasisWave) + formantJitter;
-          vs.targetEnergy = Math.max(0.18, Math.min(1.0, rawEnergy * intensity));
+          const emphasisWave = Math.sin(speechClock * 1.4);
+          const formantJitter = (Math.sin(speechClock * 22.0) + Math.cos(speechClock * 15.0)) * 0.08;
+          const baseBias = role === 'user' ? 0.44 : 0.56;
+          const rawEnergy = baseBias + 0.34 * syllableWave * (0.65 + 0.35 * emphasisWave) + formantJitter;
+          vs.targetEnergy = Math.max(0.2, Math.min(1.0, rawEnergy * currentIntensity));
         }
       } else {
-        // Idle / Listening mode: gentle resting breath
-        const breath = Math.sin(speechClock * 1.2) * 0.5 + 0.5;
-        vs.targetEnergy = (0.12 + breath * 0.08) * intensity;
+        // Idle gentle breath
+        const breath = Math.sin(speechClock * 1.15) * 0.5 + 0.5;
+        vs.targetEnergy = (0.12 + breath * 0.07) * currentIntensity;
       }
 
-      // Smooth energy lerp for organic vocal response
-      vs.currentEnergy += (vs.targetEnergy - vs.currentEnergy) * (dt * 12.0);
+      vs.currentEnergy += (vs.targetEnergy - vs.currentEnergy) * Math.min(1, dt * 14.0);
       const voiceEnergy = vs.currentEnergy;
 
-      if (onAudioEnergy) {
-        onAudioEnergy(voiceEnergy);
+      if (reportEnergy) {
+        reportEnergy(voiceEnergy);
       }
 
-      // Rotational movement
-      const rotSpeedY = prefersReducedMotion ? 0.04 : 0.18 + voiceEnergy * 0.12;
-      const rotSpeedX = prefersReducedMotion ? 0.02 : 0.06 + voiceEnergy * 0.05;
+      // Role-specific rotational dynamics
+      const roleSpeedBoost = role === 'thinking' ? 0.55 : role === 'assistant' ? 0.22 : 0.14;
+      const rotSpeedY = prefersReducedMotion ? 0.03 : roleSpeedBoost + voiceEnergy * 0.14;
       rotY += dt * rotSpeedY;
-      rotX = 0.18 + Math.sin(speechClock * 0.5) * 0.08;
+      rotX = 0.18 + Math.sin(speechClock * 0.45) * 0.08;
 
       const cosY = Math.cos(rotY);
       const sinY = Math.sin(rotY);
       const cosX = Math.cos(rotX);
       const sinX = Math.sin(rotX);
 
-      // Base radius of the sphere proportional to container size
-      // Reference image has the sphere occupying roughly 58% of vertical height
-      const baseRadius = Math.min(width, height) * 0.32;
+      // Role-specific sphere scale: user listening contracts slightly; assistant expands outward; barge-in compresses sharply
+      let radiusScale = 1.0;
+      if (role === 'user') radiusScale = 0.94 + voiceEnergy * 0.05;
+      else if (role === 'thinking') radiusScale = 0.88;
+      else if (role === 'assistant') radiusScale = 1.0 + voiceEnergy * 0.1;
+      else if (role === 'barge-in') radiusScale = 0.9 - vs.bargePulse * 0.12;
+
+      const baseRadius = Math.min(width, height) * 0.315 * radiusScale;
       const cx = width / 2;
       const cy = height / 2;
       const fov = 600;
@@ -199,36 +224,34 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
         brightness: number;
       }> = [];
 
-      // Process each 3D particle and apply speech modulation waves
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        // Complex vocal resonance waves traveling across the spherical lattice:
-        // 1. Longitudinal speech wave (rippling from poles to equator)
-        const longitudinal = Math.sin(p.phi * 4.0 - speechClock * 4.5 + p.noiseSeed);
-        // 2. Azimuthal frequency harmonic (vocal timbre ripples)
-        const azimuthal = Math.cos(p.theta * 3.0 + speechClock * 3.8);
-        // 3. High-order acoustic turbulence (air expelled during consonants)
-        const turbulence = Math.sin(p.theta * 7.0 - p.phi * 5.0 + speechClock * 8.0) * 0.5;
+        let deformation = 0;
+        if (role === 'thinking') {
+          // Orbital equatorial compression wave during tool calls
+          const equatorBand = Math.exp(-Math.pow((p.phi - Math.PI / 2) * 2.2, 2));
+          deformation = Math.sin(p.theta * 4.0 - speechClock * 7.0) * 0.18 * (0.4 + equatorBand);
+        } else {
+          const longitudinal = Math.sin(p.phi * 4.0 - speechClock * 4.6 + p.noiseSeed);
+          const azimuthal = Math.cos(p.theta * 3.0 + speechClock * 3.9);
+          const turbulence = Math.sin(p.theta * 7.0 - p.phi * 5.0 + speechClock * 8.5) * 0.48;
+          const amplitudeFactor = role === 'user' ? 0.28 : 0.42;
+          deformation = (longitudinal * 0.5 + azimuthal * 0.35 + turbulence * 0.25) * voiceEnergy * amplitudeFactor;
+        }
 
-        // Combined speech deformation displacement
-        const deformation = (longitudinal * 0.5 + azimuthal * 0.35 + turbulence * 0.25) * voiceEnergy;
-        const currentR = baseRadius * p.radiusOffset * (1.0 + deformation * 0.38);
+        const currentR = baseRadius * p.radiusOffset * (1.0 + deformation);
 
-        // Calculate 3D position
         const px = p.baseX * currentR;
         const py = p.baseY * currentR;
         const pz = p.baseZ * currentR;
 
-        // Rotate around Y axis
         const x1 = px * cosY - pz * sinY;
         const z1 = px * sinY + pz * cosY;
 
-        // Rotate around X axis
         const y2 = py * cosX - z1 * sinX;
         const z2 = py * sinX + z1 * cosX;
 
-        // 3D perspective projection
         const depth = fov + z2;
         if (depth <= 10) continue;
 
@@ -236,47 +259,44 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
         const x2d = cx + x1 * k;
         const y2d = cy + y2 * k;
 
-        // Normalized depth: z2 goes from roughly -baseRadius to +baseRadius
-        const normZ = z2 / baseRadius; // ~ -1 to +1
-
-        // Particles closer to camera (z2 > 0) are brighter, sharper, and slightly larger
-        // Particles further away (z2 < 0) are fainter and smaller
-        const depthFactor = (normZ + 1.2) / 2.2; // 0.1 to 1.0
+        const normZ = z2 / Math.max(1, baseRadius);
+        const depthFactor = (normZ + 1.2) / 2.2;
         const brightness = Math.max(0.15, Math.min(1.0, depthFactor));
 
-        // When voice is speaking intensely, frontal particles light up with subtle luminescence
-        const speechGlow = voiceEnergy > 0.4 ? (voiceEnergy - 0.4) * 0.4 : 0;
-        const alpha = Math.max(0.12, Math.min(0.98, (0.2 + brightness * 0.75 + speechGlow)));
-        const size = Math.max(0.7, (0.8 + brightness * 1.4 + (voiceEnergy * 0.3)));
+        const speechGlow = voiceEnergy > 0.35 ? (voiceEnergy - 0.35) * 0.38 : 0;
+        const alpha = Math.max(0.12, Math.min(0.98, 0.2 + brightness * 0.74 + speechGlow));
+        const size = Math.max(0.7, 0.82 + brightness * 1.38 + voiceEnergy * 0.28);
 
-        projectedList.push({
-          x2d,
-          y2d,
-          z: z2,
-          size,
-          alpha,
-          brightness,
-        });
+        projectedList.push({ x2d, y2d, z: z2, size, alpha, brightness });
       }
 
-      // Sort particles back-to-front for proper depth layering
       projectedList.sort((a, b) => a.z - b.z);
 
-      // Render particles
+      // Restrained monochromatic / tonal differentiation per speaker role
+      const isUserRole = role === 'user' || role === 'barge-in';
       for (let i = 0; i < projectedList.length; i++) {
         const pt = projectedList[i];
         ctx.beginPath();
         ctx.arc(pt.x2d, pt.y2d, pt.size, 0, Math.PI * 2);
 
-        if (pt.brightness > 0.75) {
-          // Foreground points: pure brilliant white with high opacity
-          ctx.fillStyle = `rgba(255, 255, 255, ${pt.alpha})`;
-        } else if (pt.brightness > 0.45) {
-          // Midground points: crisp soft white
-          ctx.fillStyle = `rgba(240, 243, 250, ${pt.alpha * 0.85})`;
+        if (isUserRole) {
+          // Ahmed (User): crisp cool slate-silver luminance
+          if (pt.brightness > 0.72) {
+            ctx.fillStyle = `rgba(216, 232, 255, ${pt.alpha})`;
+          } else if (pt.brightness > 0.45) {
+            ctx.fillStyle = `rgba(176, 204, 240, ${pt.alpha * 0.82})`;
+          } else {
+            ctx.fillStyle = `rgba(135, 165, 205, ${pt.alpha * 0.5})`;
+          }
         } else {
-          // Background points: subtle atmospheric particles
-          ctx.fillStyle = `rgba(200, 210, 225, ${pt.alpha * 0.55})`;
+          // VOID (Assistant / Idle / Tool Orchestration): pure luminous white
+          if (pt.brightness > 0.75) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${pt.alpha})`;
+          } else if (pt.brightness > 0.45) {
+            ctx.fillStyle = `rgba(240, 243, 250, ${pt.alpha * 0.85})`;
+          } else {
+            ctx.fillStyle = `rgba(200, 210, 225, ${pt.alpha * 0.55})`;
+          }
         }
         ctx.fill();
       }
@@ -293,7 +313,7 @@ export const VoidParticleSphere: React.FC<VoidParticleSphereProps> = ({
       }
       resizeObserver.disconnect();
     };
-  }, [isSpeaking, intensity, onAudioEnergy]);
+  }, [externalEnergyRef]);
 
   return (
     <canvas

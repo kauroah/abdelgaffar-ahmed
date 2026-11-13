@@ -5,7 +5,7 @@ import { PROFILE_DATA } from '../data/portfolioData';
 export const EducationSection: React.FC = () => {
   return (
     <section id="about" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Avinash-style Header */}
         <div className="text-center mb-12">
@@ -16,7 +16,7 @@ export const EducationSection: React.FC = () => {
             About <span className="animated-text-gradient italic">Ahmed</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-[var(--muted)] max-w-2xl mx-auto mt-3">
-            Software engineer with a solid academic foundation in computer science and distributed systems.
+            Flutter &amp; Applied AI Engineer with a computer science foundation in mobile architecture, machine learning inference, and scalable backends.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ export const EducationSection: React.FC = () => {
                 Ahmed Abdelgaffar
               </h3>
               <p className="text-xs text-[var(--muted)] mt-0.5">
-                Full-Stack & Distributed Systems Developer
+                Flutter &amp; Applied AI Systems Engineer
               </p>
             </div>
 
@@ -39,7 +39,7 @@ export const EducationSection: React.FC = () => {
           </div>
 
           <p className="text-sm text-[var(--muted)] leading-relaxed mt-4">
-            I hold a Bachelor's Degree in Software Engineering from <strong className="text-[var(--foreground)] font-medium">Kazan Federal University (Higher Institute of ITIS)</strong> and am currently completing my Master's Degree in Information Systems Architecture at <strong className="text-[var(--foreground)] font-medium">RTU MIREA</strong> under a competitive Russian Federation State Quota Scholarship. My core technical strengths span Java 21, Spring Boot, RabbitMQ, Kafka, TypeScript, Next.js, Flutter, and PostgreSQL.
+            I hold a Bachelor's Degree in Software Engineering from <strong className="text-[var(--foreground)] font-medium">Kazan Federal University (Higher Institute of ITIS)</strong>—where I defended my machine-learning medical imaging thesis (<strong className="text-[var(--foreground)] font-medium">PneumoAI</strong>)—and am currently completing my Master's Degree in Information Systems Architecture at <strong className="text-[var(--foreground)] font-medium">RTU MIREA</strong> under a Russian Federation State Quota Scholarship. My primary engineering focus centers on <strong className="text-[var(--foreground)] font-medium">Flutter (Clean Architecture, BLoC)</strong> and <strong className="text-[var(--foreground)] font-medium">Applied AI (Voice Agents, Gemini/LLMs, MongoDB RAG, ONNX)</strong>, supported by production TypeScript, Node.js, Java 21 / Spring Boot, and PostgreSQL backends.
           </p>
         </div>
 
@@ -72,15 +72,15 @@ export const EducationSection: React.FC = () => {
               <div className="space-y-1.5 text-xs text-[var(--foreground)]/90">
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
-                  <span>High-concurrency microservices & distributed consensus</span>
+                  <span>MongoDB Atlas Vector Search &amp; RAG AI architectures</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
-                  <span>Event log replication with RabbitMQ & Kafka</span>
+                  <span>High-concurrency microservices &amp; distributed state machines</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
-                  <span>MongoDB Atlas Vector Search & RAG pipelines</span>
+                  <span>Event streaming with RabbitMQ &amp; Apache Kafka</span>
                 </div>
               </div>
             </div>
@@ -102,25 +102,25 @@ export const EducationSection: React.FC = () => {
                 Kazan Federal University (KFU)
               </h3>
               <div className="text-xs font-medium text-slate-600 dark:text-slate-400 mt-0.5 mb-3">
-                Higher Institute of ITIS · Software Engineering
+                Higher Institute of ITIS · Software Engineering &amp; Intelligent Systems
               </div>
 
               <p className="text-xs text-[var(--muted)] leading-relaxed mb-4">
-                Rigorous curriculum covering multi-threaded programming, relational database normalization, operating systems, and network protocols.
+                Graduated in Software Engineering &amp; Intelligent Systems with a machine-learning clinical imaging thesis (PneumoAI), alongside systems concurrency and relational engineering.
               </p>
 
               <div className="space-y-1.5 text-xs text-[var(--foreground)]/90">
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>Concurrent Java Programming (Locks, CompletableFuture)</span>
+                  <span>ML Thesis: PneumoAI (DenseNet121 ONNX, Grad-CAM &amp; Qwen LLM)</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>ACID Transaction Isolation & SQL Query Optimization</span>
+                  <span>Mobile &amp; Intelligent Systems Engineering (Flutter, Python)</span>
                 </div>
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
-                  <span>Spring Security & OAuth 2.0 / OIDC Specifications</span>
+                  <span>Concurrent Systems, ACID Isolation &amp; OAuth 2.0 / OIDC</span>
                 </div>
               </div>
             </div>

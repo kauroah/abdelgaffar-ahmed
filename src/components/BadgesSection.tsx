@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Award, ExternalLink, ShieldCheck, FileCheck } from 'lucide-react';
+import { ExternalLink, ShieldCheck, FileCheck } from 'lucide-react';
 import { BadgeItem, PROFILE_DATA } from '../data/portfolioData';
 
 interface BadgesSectionProps {
@@ -14,7 +14,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
   badges,
   onSelectBadge
 }) => {
-  const [filter, setFilter] = useState<'All' | BadgeItem['issuer']>('All');
+  const [filter, setFilter] = useState<'All' | 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI'>('All');
 
   // Deduplicate badges by credentialId or normalized title to ensure zero duplicates
   const normTitle = (s: string) => s.toLowerCase().replace(/skill\s*badge/gi, '').replace(/[^a-z0-9]/g, '');
@@ -35,7 +35,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
 
   return (
     <section id="badges" className="py-16 md:py-24 border-t border-[var(--border)] bg-[var(--background)]">
-      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+      <div className="w-full max-w-7xl 2xl:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
         {/* Clean Header */}
         <div className="text-center mb-12">
@@ -43,10 +43,10 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
             CREDENTIALS & CERTIFICATIONS
           </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal text-[var(--foreground)] tracking-tight">
-            Certificates & <span className="animated-text-gradient italic">Badges</span>
+            Badges &amp; <span className="animated-text-gradient italic">Certificates</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-[var(--muted)] max-w-2xl mx-auto mt-3">
-            Verified certificates and skill badges across AI, software development, and cloud technologies.
+            Verified technical skill badges and course certificates earned from MongoDB, Google Cloud, and FreeAcademy AI.
           </p>
 
           {/* Credly Link & Filter Pills */}
@@ -61,18 +61,8 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
               <span>Verify on Credly</span>
               <ExternalLink className="w-3.5 h-3.5 opacity-70" />
             </a>
-            <a
-              href="https://freeacademy.ai/home"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-[var(--foreground)] bg-[var(--surface)] border border-[var(--border)] rounded-full hover:bg-[var(--surface-hover)] transition-all shadow-xs"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>FreeAcademy AI</span>
-              <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-            </a>
 
-            <div className="flex items-center gap-1.5 p-0.5 rounded-full border border-[var(--border)] bg-[var(--surface)]">
+            <div className="flex flex-wrap items-center justify-center gap-1 p-0.5 rounded-full border border-[var(--border)] bg-[var(--surface)]">
               {(['All', 'Google Cloud', 'MongoDB', 'FreeAcademy AI'] as const).map((tab) => (
                 <button
                   key={tab}
@@ -92,28 +82,28 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
 
         {/* Badges Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-          {filteredBadges.map((badge) => (
+          {filteredBadges.map((badge) => {
+            const isCertificate = badge.issuer === 'FreeAcademy AI';
+            return (
             <div
               key={badge.id}
               onClick={() => onSelectBadge(badge)}
-              className="motion-card group rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 flex flex-col justify-between hover:border-[var(--muted)] hover:shadow-md transition-all cursor-pointer shadow-xs"
+              className="group rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 flex flex-col justify-between hover:border-[var(--muted)] hover:shadow-md transition-all cursor-pointer shadow-xs"
             >
               <div>
-                {/* Header with Badge Image */}
+                {/* Header with Badge Image or Certificate Thumbnail */}
                 <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className={`rounded-xl bg-[var(--surface)] flex items-center justify-center border border-[var(--border)] shrink-0 group-hover:scale-105 transition-transform overflow-hidden ${
-                    badge.issuer === 'FreeAcademy AI' ? 'w-24 h-16' : 'w-16 h-16 p-2.5'
-                  }`}>
-                    {badge.badgeImage ? (
-                      <img
-                        src={badge.badgeImage}
-                        alt={`${badge.title} certificate`}
-                        referrerPolicy="no-referrer"
-                        className="w-full h-full object-contain"
-                      />
-                    ) : (
-                      <Award className="h-8 w-8 text-indigo-500" aria-hidden="true" />
-                    )}
+                  <div
+                    className={`rounded-xl bg-[var(--surface)] flex items-center justify-center border border-[var(--border)] shrink-0 overflow-hidden group-hover:scale-105 transition-transform ${
+                      isCertificate ? 'w-24 h-16 p-0.5' : 'w-16 h-16 p-2.5'
+                    }`}
+                  >
+                    <img
+                      src={badge.badgeImage}
+                      alt={`${badge.title} ${isCertificate ? 'certificate' : 'badge'}`}
+                      referrerPolicy="no-referrer"
+                      className={`w-full h-full ${isCertificate ? 'object-cover rounded-lg' : 'object-contain'}`}
+                    />
                   </div>
 
                   <div className="text-right">
@@ -168,7 +158,8 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

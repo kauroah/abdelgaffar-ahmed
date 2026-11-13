@@ -1,20 +1,14 @@
 import { jsPDF } from 'jspdf';
-import { TargetRole } from '../components/CvStudioModal';
-import { PROFILE_DATA } from '../data/portfolioData';
-
-interface RoleConfig {
-  title: string;
-  subtitle: string;
-  summary: string;
-  primarySkills: string;
-}
+import { BulletStyle, TargetRole, buildResumeData } from '../data/cvTemplates';
 
 export function generateAndDownloadPdf(
   targetRole: TargetRole,
-  roleConfig: RoleConfig,
   includeBadges: boolean,
-  bulletStyle: 'xyz' | 'concise'
+  bulletStyle: BulletStyle,
+  portfolioUrl?: string
 ) {
+  const resume = buildResumeData(targetRole, bulletStyle);
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'pt',
@@ -23,257 +17,209 @@ export function generateAndDownloadPdf(
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 36; // 0.5 inch margins
+  const margin = 34;
   const contentWidth = pageWidth - margin * 2;
-  let y = margin + 10;
+  let y = margin + 8;
 
-  // Helper to check page break
   const checkPageBreak = (neededHeight: number) => {
     if (y + neededHeight > pageHeight - margin) {
       doc.addPage();
-      y = margin + 15;
+      y = margin + 12;
     }
   };
 
   // 1. Header: Name
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(20);
-  doc.setTextColor(15, 23, 42); // slate-900
+  doc.setFontSize(19);
+  doc.setTextColor(15, 23, 42);
   doc.text('AHMED ABDELGAFFAR', pageWidth / 2, y, { align: 'center' });
-  y += 18;
+  y += 16;
 
-  // Header: Target Role Title
+  // Target Role Title
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(79, 70, 229); // indigo-600
-  doc.text(roleConfig.title.toUpperCase(), pageWidth / 2, y, { align: 'center' });
-  y += 14;
-
-  // Header: Subtitle
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(71, 85, 105); // slate-600
-  doc.text(roleConfig.subtitle, pageWidth / 2, y, { align: 'center' });
+  doc.setFontSize(10.5);
+  doc.setTextColor(55, 48, 163);
+  doc.text(resume.roleTitle.toUpperCase(), pageWidth / 2, y, { align: 'center' });
   y += 13;
 
-  // Header: Contact Details
+  // Subtitle
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
+  doc.setTextColor(71, 85, 105);
+  const subLines = doc.splitTextToSize(resume.subtitle, contentWidth);
+  doc.text(subLines, pageWidth / 2, y, { align: 'center' });
+  y += subLines.length * 10 + 3;
+
+  // Contact Details
+  doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  const contactLine = 'Moscow, Russia  |  kauroah@gmail.com  |  +7 (996) 846-9573  |  github.com/kauroah  |  credly.com/users/ahmed-abdelgaffar';
-  doc.text(contactLine, pageWidth / 2, y, { align: 'center' });
-  y += 10;
+  const portfolioHost = portfolioUrl ? portfolioUrl.replace(/^https?:\/\//, '') : '';
+  const contactParts = [
+    'Moscow, Russia',
+    'ahmedabdelhady0246@gmail.com',
+    '+7 (996) 846-9573',
+    'github.com/kauroah',
+    'credly.com/users/ahmed-abdelgaffar',
+  ];
+  if (portfolioHost) contactParts.push(portfolioHost);
+  const contactLine = contactParts.join('  |  ');
+  const contactLines = doc.splitTextToSize(contactLine, contentWidth);
+  doc.text(contactLines, pageWidth / 2, y, { align: 'center' });
+  y += contactLines.length * 10 + 4;
 
-  // Horizontal Divider Line
-  doc.setDrawColor(203, 213, 225); // slate-300
-  doc.setLineWidth(0.8);
+  // Divider
+  doc.setDrawColor(203, 213, 225);
+  doc.setLineWidth(0.75);
   doc.line(margin, y, pageWidth - margin, y);
-  y += 14;
+  y += 13;
 
-  // Section Header Generator
   const renderSectionHeader = (title: string) => {
-    checkPageBreak(25);
+    checkPageBreak(28);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
+    doc.setFontSize(9.5);
     doc.setTextColor(15, 23, 42);
     doc.text(title.toUpperCase(), margin, y);
-    y += 4;
+    y += 3.5;
     doc.setDrawColor(226, 232, 240);
     doc.setLineWidth(0.5);
     doc.line(margin, y, pageWidth - margin, y);
     y += 10;
   };
 
-  // 2. PROFESSIONAL SUMMARY
+  const renderBullet = (text: string) => {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.3);
+    doc.setTextColor(51, 65, 85);
+    const bulletIndent = 10;
+    const lines = doc.splitTextToSize(text, contentWidth - bulletIndent);
+    checkPageBreak(lines.length * 10 + 3);
+    doc.text('•', margin + 2, y);
+    doc.text(lines, margin + bulletIndent, y);
+    y += lines.length * 10 + 2;
+  };
+
+  // 2. Professional Summary
   renderSectionHeader('Professional Summary');
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.5);
+  doc.setFontSize(8.3);
   doc.setTextColor(51, 65, 85);
-  const summaryLines = doc.splitTextToSize(roleConfig.summary, contentWidth);
+  const summaryLines = doc.splitTextToSize(resume.summary, contentWidth);
   doc.text(summaryLines, margin, y);
-  y += summaryLines.length * 11 + 6;
+  y += summaryLines.length * 10.5 + 6;
 
-  // 3. TECHNICAL COMPETENCIES
+  // 3. Technical Competencies
   renderSectionHeader('Technical Competencies');
-  const skillsList = [
-    { label: 'Core Focus:', text: roleConfig.primarySkills },
-    { label: 'Backend & Distributed:', text: 'Java 21, Spring Boot 3, Spring Batch, Spring Security, Node.js, Express, Apache Kafka, RabbitMQ.' },
-    { label: 'Databases & Vector:', text: 'PostgreSQL, PostGIS, MongoDB (Atlas Vector Search), Redis, Firebase Firestore, Prisma.' },
-    { label: 'AI & Architecture:', text: 'Google AI Studio, Gemini API, MongoDB RAG, ONNX Runtime, Clean Architecture, Docker Compose.' },
-  ];
-
-  skillsList.forEach(s => {
-    checkPageBreak(12);
+  resume.competencies.forEach((row) => {
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8.5);
+    doc.setFontSize(8.3);
+    const labelStr = `• ${row.label}: `;
+    const labelWidth = doc.getTextWidth(labelStr);
+    doc.setFont('helvetica', 'normal');
+    const textLines = doc.splitTextToSize(row.value, contentWidth - labelWidth - 4);
+    checkPageBreak(textLines.length * 10 + 3);
+
+    doc.setFont('helvetica', 'bold');
     doc.setTextColor(15, 23, 42);
-    doc.text(`• ${s.label} `, margin + 4, y);
-    const labelWidth = doc.getTextWidth(`• ${s.label} `);
+    doc.text(labelStr, margin + 2, y);
 
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(51, 65, 85);
-    const textLines = doc.splitTextToSize(s.text, contentWidth - labelWidth - 4);
-    doc.text(textLines, margin + 4 + labelWidth, y);
-    y += textLines.length * 10 + 2;
+    doc.text(textLines, margin + 2 + labelWidth, y);
+    y += textLines.length * 10 + 2.5;
   });
   y += 4;
 
-  // 4. VERIFIED CERTIFICATIONS & BADGES
+  // 4. Verified Certifications & Badges
   if (includeBadges) {
-    renderSectionHeader('Verified Industry Certifications & Badges');
-    const badges = [
-      'Develop AI-Powered Prototypes in Google AI Studio — Google Cloud Skill Badge (Credly: C34mJTu0) | Nov 2026',
-      'Create Your First Gemini Enterprise Application — Google Cloud Skill Badge | Nov 2026',
-      'Building RAG Apps Using MongoDB — MongoDB Skill Badge & Proof of Completion (Credly: 0ca8c49e) | Nov 2026',
-      'AI and Innovation: How MongoDB Enables a Resilient AI Strategy — MongoDB Skill Badge (Credly: ukc2g4FK) | Nov 2026',
-      'MongoDB Schema Design Optimization — MongoDB Skill Badge (Credly: 8e30ce61) | Nov 2026',
-    ];
-
-    badges.forEach(b => {
-      checkPageBreak(12);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8.5);
-      doc.setTextColor(51, 65, 85);
-      const bLines = doc.splitTextToSize(`• ${b}`, contentWidth - 4);
-      doc.text(bLines, margin + 4, y);
-      y += bLines.length * 10 + 2;
+    renderSectionHeader('Verified Certifications & Skill Badges (13)');
+    resume.badges.forEach((badgeLine) => {
+      renderBullet(badgeLine);
     });
     y += 4;
   }
 
-  // 5. PROFESSIONAL EXPERIENCE
-  renderSectionHeader('Professional Experience');
-
-  const experiences = [
-    {
-      company: 'Founders',
-      period: 'June 2025 – August 2026',
-      role: 'Mobile & Full-Stack Engineer · Moscow, Russia',
-      bullets: bulletStyle === 'xyz' ? [
-        'Architected core mobile investment application from ground up using Flutter, Dart, BLoC/Cubit, and Clean Architecture, separating presentation, domain, and data layers into testable modular features.',
-        'Accelerated client application rendering and scrolling performance by 30% by refactoring state trees, preventing redundant widget rebuilds, and caching network payloads.',
-        'Integrated secure REST APIs and Firebase Firestore services to achieve real-time synchronization of dynamic deal rooms, investment portfolios, and investor verification.',
-        'Engineered encrypted user session management using Flutter Secure Storage and JWT token rotation, eliminating unauthorized session hijacking vectors.',
-        'Delivered production MVP on schedule, implementing reusable component libraries, form validation pipelines, and offline-resilient local storage.',
-      ] : [
-        'Led mobile architecture for investment platform using Flutter and Clean Architecture.',
-        'Boosted app performance by 30% through state optimization and widget tree refactoring.',
-        'Connected REST APIs and Firebase Firestore for real-time portfolio updates and investor workflows.',
-        'Implemented secure session management and JWT authentication.',
-      ],
-    },
-    {
-      company: 'Independent Project Development',
-      period: 'June 2026 – September 2026',
-      role: 'Distributed Systems & Java Backend Developer · Moscow, Russia',
-      bullets: bulletStyle === 'xyz' ? [
-        'Constructed a distributed task processing engine using Java 21, Spring Boot, and RabbitMQ, handling multi-threaded job dispatching via ExecutorService and CompletableFuture.',
-        'Guaranteed 100% execution consistency across multi-node clusters by engineering distributed locking via Redis and database unique constraint idempotency keys.',
-        'Designed stateful recovery workers in PostgreSQL that automatically restore and resume uncompleted task pipelines after sudden container termination.',
-        'Decreased system diagnosis time by 40% by implementing comprehensive Micrometer instrumentation and Prometheus dashboards monitoring queue backlogs and consumer latency.',
-        'Developed exhaustive integration test suites utilizing Testcontainers and JUnit 5 to validate database transactional rollbacks and RabbitMQ dead-letter retry workflows.',
-      ] : [
-        'Engineered distributed background job execution platform using Java 21, Spring Boot, and RabbitMQ.',
-        'Prevented duplicate job executions across distributed nodes with Redis locks and DB constraints.',
-        'Built zero-data-loss recovery mechanisms to resume interrupted tasks upon service restart.',
-        'Configured queue metrics and latency telemetry via Micrometer and Prometheus.',
-      ],
-    },
-    {
-      company: 'Kazan Federal University (Enterprise Academic Projects)',
-      period: 'January 2023 – June 2024',
-      role: 'Java Backend Engineer · Kazan, Russia',
-      bullets: [
-        'Centralized IAM Server: Engineered OAuth 2.0 / OIDC identity provider with Spring Authorization Server, multi-tenant RBAC, and Redis token blacklist caching (-50% verification latency).',
-        'Event-Driven Logistics: Built asynchronous Kafka pipeline with PostGIS geospatial routing reducing courier assignment delays by 35% with live WebSocket status feeds.',
-        'Transactional Outbox Payments: Microservices eliminating dual-write hazards with Kafka Dead Letter Topics and Testcontainers.',
-      ],
-    },
-  ];
-
-  experiences.forEach(exp => {
-    checkPageBreak(35);
-    // Company and Period
+  // 5. Engineering Experience
+  renderSectionHeader('Engineering Experience');
+  resume.experiences.forEach((exp) => {
+    checkPageBreak(36);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9);
     doc.setTextColor(15, 23, 42);
     doc.text(exp.company, margin, y);
+
     doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
+    doc.setFontSize(8.2);
     doc.setTextColor(100, 116, 139);
     doc.text(exp.period, pageWidth - margin, y, { align: 'right' });
-    y += 11;
+    y += 10.5;
 
-    // Role
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8.5);
-    doc.setTextColor(79, 70, 229);
-    doc.text(exp.role, margin, y);
-    y += 11;
+    doc.setFontSize(8.2);
+    doc.setTextColor(55, 48, 163);
+    doc.text(exp.roleLocation, margin, y);
+    y += 10.5;
 
-    // Bullets
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.setTextColor(51, 65, 85);
-    exp.bullets.forEach(bullet => {
-      const bLines = doc.splitTextToSize(`• ${bullet}`, contentWidth - 8);
-      checkPageBreak(bLines.length * 10 + 2);
-      doc.text(bLines, margin + 4, y);
-      y += bLines.length * 10 + 2;
-    });
+    exp.bullets.forEach((b) => renderBullet(b));
     y += 4;
   });
 
-  // 6. EDUCATION
-  renderSectionHeader('Education');
-
-  const edu = [
-    {
-      inst: 'RTU MIREA (Russian Technological University)',
-      period: '2026 – 2028 (Year 1)',
-      degree: "Master's Degree in Software Engineering (Information Systems Architecture) · Moscow, Russia",
-      note: 'State Scholarship Quota winner awarded by Ministry of Science and Higher Education of Russia.',
-    },
-    {
-      inst: 'Kazan Federal University (KFU)',
-      period: '2022 – 2026',
-      degree: "Bachelor's Degree in Software Engineering · Higher Institute of ITIS · Kazan, Russia",
-      note: 'Focus: Concurrent Programming, Distributed Systems, Relational Theory, System Design.',
-    },
-  ];
-
-  edu.forEach(e => {
-    checkPageBreak(25);
+  // 6. Selected Projects (VOID, Adam & Eve, PneumoAI, etc.)
+  renderSectionHeader('Selected Projects');
+  resume.projects.forEach((proj) => {
+    checkPageBreak(34);
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
+    doc.setFontSize(8.8);
     doc.setTextColor(15, 23, 42);
-    doc.text(e.inst, margin, y);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8.5);
-    doc.setTextColor(100, 116, 139);
-    doc.text(e.period, pageWidth - margin, y, { align: 'right' });
-    y += 11;
-
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(51, 65, 85);
-    doc.text(e.degree, margin, y);
+    doc.text(proj.title, margin, y);
     y += 10;
 
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(8);
     doc.setTextColor(100, 116, 139);
-    doc.text(e.note, margin, y);
-    y += 12;
+    const stackLines = doc.splitTextToSize(proj.stack, contentWidth);
+    doc.text(stackLines, margin, y);
+    y += stackLines.length * 9.5 + 1.5;
+
+    proj.bullets.forEach((b) => renderBullet(b));
+    y += 3;
   });
 
-  // 7. LANGUAGES
-  renderSectionHeader('Languages');
-  checkPageBreak(15);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.5);
-  doc.setTextColor(51, 65, 85);
-  doc.text('Arabic: Native proficiency  |  English: C1 (Advanced / Professional)  |  Russian: C1 (Advanced / Professional)', margin, y);
+  // 7. Education
+  renderSectionHeader('Education & Scholarships');
+  resume.education.forEach((edu) => {
+    checkPageBreak(32);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8.8);
+    doc.setTextColor(15, 23, 42);
+    doc.text(edu.institution, margin, y);
 
-  // Direct Browser Download
-  const filename = `Ahmed_Abdelgaffar_CV_${targetRole}.pdf`;
-  doc.save(filename);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.2);
+    doc.setTextColor(100, 116, 139);
+    doc.text(edu.period, pageWidth - margin, y, { align: 'right' });
+    y += 10;
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.2);
+    doc.setTextColor(51, 65, 85);
+    doc.text(edu.degree, margin, y);
+    y += 9.5;
+
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(7.8);
+    doc.setTextColor(100, 116, 139);
+    const noteLines = doc.splitTextToSize(edu.note, contentWidth);
+    doc.text(noteLines, margin, y);
+    y += noteLines.length * 9.5 + 3;
+  });
+
+  // 8. Languages
+  renderSectionHeader('Languages');
+  checkPageBreak(14);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.3);
+  doc.setTextColor(51, 65, 85);
+  doc.text(resume.languages, margin, y);
+
+  doc.save(`Ahmed_Abdelgaffar_CV_${targetRole}.pdf`);
 }
