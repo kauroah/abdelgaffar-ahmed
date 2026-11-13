@@ -25,7 +25,7 @@ export const VoidProjectSection: React.FC = () => {
     <section 
       id="void" 
       aria-label="VOID — Real-Time Voice Assistant"
-      className="w-full bg-[#F7F5F0] text-[#171717] dark:bg-[var(--background)] dark:text-[#E8E6DF] transition-colors duration-200 py-20 sm:py-28 lg:py-32 border-b border-[#E5E2DA] dark:border-[#242320] overflow-hidden"
+      className="w-full bg-[var(--background)] text-[#171717] dark:bg-[var(--background)] dark:text-[#E8E6DF] transition-colors duration-200 pt-20 sm:pt-28 lg:pt-32 pb-12 sm:pb-16 lg:pb-20 border-b border-[var(--border)] dark:border-[#242320] overflow-hidden"
     >
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         
@@ -82,7 +82,7 @@ export const VoidProjectSection: React.FC = () => {
             </div>
 
             {/* Technical Specifications Grid */}
-            <div className="pt-5 border-t border-[#E5E2DA] dark:border-[#2C2A26] grid grid-cols-2 gap-3 text-xs">
+            <div className="pt-5 border-t border-[var(--border)] dark:border-[#2C2A26] grid grid-cols-2 gap-3 text-xs">
               {data.specs.map((spec) => (
                 <div key={spec.label} className="space-y-0.5">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-[#171717]/50 dark:text-[#E8E6DF]/50 block">
@@ -96,7 +96,7 @@ export const VoidProjectSection: React.FC = () => {
             </div>
 
             {/* Contribution Callout */}
-            <div className="pt-5 border-t border-[#E5E2DA] dark:border-[#2C2A26]">
+            <div className="pt-5 border-t border-[var(--border)] dark:border-[#2C2A26]">
               <span className="block text-[11px] font-mono uppercase tracking-wider text-[#171717]/50 dark:text-[#E8E6DF]/50 mb-1">
                 {data.contributionLabel}
               </span>
@@ -124,7 +124,7 @@ export const VoidProjectSection: React.FC = () => {
               {/* Explore architecture link expands details and smoothly scrolls to them */}
               <button
                 onClick={handleExploreArchitecture}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#171717] text-[#F7F5F0] dark:bg-[#E8E6DF] dark:text-[#171717] hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#171717] dark:focus-visible:ring-[#E8E6DF] focus-visible:outline-none transition-all duration-150 cursor-pointer shadow-xs"
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-[#171717] text-[var(--background)] dark:bg-[#E8E6DF] dark:text-[#171717] hover:opacity-90 focus-visible:ring-2 focus-visible:ring-[#171717] dark:focus-visible:ring-[#E8E6DF] focus-visible:outline-none transition-all duration-150 cursor-pointer shadow-xs"
                 aria-label="Explore VOID architecture details below"
               >
                 <span>Explore architecture</span>

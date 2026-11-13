@@ -10,13 +10,28 @@ describe('portfolio profile data', () => {
     expect(PROFILE_DATA.technicalHeadline.trim().length).toBeGreaterThan(0);
   });
 
-  it('uses unique badge IDs and ships each badge image locally', () => {
+  it('uses unique badge IDs and ships each provided badge image locally', () => {
     const badgeIds = PROFILE_DATA.badges.map((badge) => badge.id);
 
     expect(new Set(badgeIds).size).toBe(badgeIds.length);
     for (const badge of PROFILE_DATA.badges) {
+      if (!badge.badgeImage) continue;
       expect(badge.badgeImage).toMatch(/^\/assets\//);
       expect(existsSync(resolve(process.cwd(), 'public', badge.badgeImage.slice(1)))).toBe(true);
+    }
+  });
+
+  it('includes all seven verified FreeAcademy AI certificates', () => {
+    const certificates = PROFILE_DATA.badges.filter((badge) => badge.issuer === 'FreeAcademy AI');
+
+    expect(certificates).toHaveLength(7);
+    expect(certificates.every((badge) => badge.verifyUrl.startsWith('https://freeacademy.ai/verify/'))).toBe(true);
+    expect(certificates.every((badge) => badge.keySkills.length >= 3)).toBe(true);
+    for (const certificate of certificates) {
+      if (!certificate.badgeImage) {
+        throw new Error(`Missing certificate image for ${certificate.title}`);
+      }
+      expect(existsSync(resolve(process.cwd(), 'public', certificate.badgeImage.slice(1)))).toBe(true);
     }
   });
 });

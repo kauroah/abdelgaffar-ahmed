@@ -21,7 +21,7 @@ export const ProjectsSection: React.FC<ProjectsSectionProps> = ({ onSelectProjec
     });
 
   return (
-    <section id="projects" className="border-t border-[var(--border)] bg-[var(--background)] py-16 md:py-24">
+    <section id="projects" className="border-t border-[var(--border)] bg-[var(--background)] pt-12 pb-16 md:pt-16 md:pb-24">
       <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="mb-12 text-center">
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-[var(--muted)]">

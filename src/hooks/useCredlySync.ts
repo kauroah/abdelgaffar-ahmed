@@ -19,7 +19,13 @@ export function useCredlySync() {
       if (res.ok) {
         const data = await res.json();
         if (data.badges && Array.isArray(data.badges) && data.badges.length > 0) {
-          setBadges(data.badges);
+          const mergedBadges = [
+            ...data.badges,
+            ...PROFILE_DATA.badges.filter((badge) => badge.issuer === 'FreeAcademy AI'),
+          ];
+          setBadges(mergedBadges.filter((badge, index, items) =>
+            items.findIndex((candidate) => candidate.id === badge.id) === index
+          ));
           setLastSyncTime(data.lastSyncTime || Date.now());
           setNextSyncTime(data.nextSyncTime || Date.now() + SYNC_INTERVAL_MS);
           setSyncStatus('success');

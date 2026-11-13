@@ -29,7 +29,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
   architectureSummary
 }, ref) => {
   return (
-    <div ref={ref} id="void-architecture" className="mt-16 sm:mt-24 pt-10 border-t border-[#E5E2DA] dark:border-[#2C2A26]">
+    <div ref={ref} id="void-architecture" className="mt-16 sm:mt-24 pt-10 border-t border-[var(--border)] dark:border-[#2C2A26]">
       {/* Section Subheading & Monospace Tag */}
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2 mb-10">
         <div>
@@ -46,7 +46,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
       </div>
 
       {/* 3 Numbered Columns with Vertical Dividers on Desktop */}
-      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#E5E2DA] dark:divide-[#2C2A26] border-y border-[#E5E2DA] dark:border-[#2C2A26]">
+      <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[var(--border)] dark:divide-[#2C2A26] border-y border-[var(--border)] dark:border-[#2C2A26]">
         {columns.map((col, idx) => (
           <div
             key={col.number}
@@ -88,7 +88,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
           onClick={onToggleExpand}
           aria-expanded={isExpanded}
           aria-controls="expanded-architecture-panel"
-          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#171717] dark:text-[#E8E6DF] bg-black/[0.04] dark:bg-white/[0.05] hover:bg-black/[0.08] dark:hover:bg-white/[0.09] focus-visible:ring-2 focus-visible:ring-[#171717] dark:focus-visible:ring-[#E8E6DF] focus-visible:outline-none px-4 py-2.5 rounded-full border border-[#E5E2DA] dark:border-[#2C2A26] transition-all duration-150 cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#171717] dark:text-[#E8E6DF] bg-black/[0.04] dark:bg-white/[0.05] hover:bg-black/[0.08] dark:hover:bg-white/[0.09] focus-visible:ring-2 focus-visible:ring-[#171717] dark:focus-visible:ring-[#E8E6DF] focus-visible:outline-none px-4 py-2.5 rounded-full border border-[var(--border)] dark:border-[#2C2A26] transition-all duration-150 cursor-pointer"
         >
           <span>{isExpanded ? "Collapse verified pipeline blueprint" : "Explore verified pipeline blueprint"}</span>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -102,7 +102,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
           isExpanded ? 'max-h-[1200px] opacity-100 mt-8' : 'max-h-0 opacity-0 pointer-events-none'
         }`}
       >
-        <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-[#E5E2DA] dark:border-[#2C2A26] space-y-8">
+        <div className="p-6 sm:p-8 rounded-xl sm:rounded-2xl bg-black/[0.02] dark:bg-white/[0.02] border border-[var(--border)] dark:border-[#2C2A26] space-y-8">
           
           {/* Architecture Overview */}
           <div>
@@ -115,13 +115,13 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
           </div>
 
           {/* Visual Dataflow Pipeline Diagram */}
-          <div className="p-4 sm:p-5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-[#E5E2DA] dark:border-[#2C2A26]">
+          <div className="p-4 sm:p-5 rounded-xl bg-black/[0.03] dark:bg-white/[0.03] border border-[var(--border)] dark:border-[#2C2A26]">
             <span className="text-[10px] font-mono uppercase tracking-widest text-[#171717]/50 dark:text-[#E8E6DF]/50 block mb-3">
               Event-Driven Audio Pipeline Flow
             </span>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Node 1 */}
-              <div className="p-3.5 rounded-lg bg-[#F7F5F0] dark:bg-[#1A1A18] border border-[#E5E2DA] dark:border-[#2C2A26] flex flex-col justify-between">
+              <div className="p-3.5 rounded-lg bg-[var(--surface)] dark:bg-[#1A1A18] border border-[var(--border)] dark:border-[#2C2A26] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-xs font-medium text-[#171717] dark:text-[#E8E6DF] mb-1">
                     <Mic className="w-3.5 h-3.5 opacity-70" />
@@ -137,7 +137,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
               </div>
 
               {/* Node 2 */}
-              <div className="p-3.5 rounded-lg bg-[#F7F5F0] dark:bg-[#1A1A18] border border-[#E5E2DA] dark:border-[#2C2A26] flex flex-col justify-between">
+              <div className="p-3.5 rounded-lg bg-[var(--surface)] dark:bg-[#1A1A18] border border-[var(--border)] dark:border-[#2C2A26] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-xs font-medium text-[#171717] dark:text-[#E8E6DF] mb-1">
                     <Radio className="w-3.5 h-3.5 opacity-70" />
@@ -153,7 +153,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
               </div>
 
               {/* Node 3 */}
-              <div className="p-3.5 rounded-lg bg-[#F7F5F0] dark:bg-[#1A1A18] border border-[#E5E2DA] dark:border-[#2C2A26] flex flex-col justify-between">
+              <div className="p-3.5 rounded-lg bg-[var(--surface)] dark:bg-[#1A1A18] border border-[var(--border)] dark:border-[#2C2A26] flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 text-xs font-medium text-[#171717] dark:text-[#E8E6DF] mb-1">
                     <Cpu className="w-3.5 h-3.5 opacity-70" />
@@ -171,7 +171,7 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
           </div>
 
           {/* Pipeline Phases List */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2 border-t border-[#E5E2DA] dark:border-[#2C2A26]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-2 border-t border-[var(--border)] dark:border-[#2C2A26]">
             {architectureSummary.pipelineSteps.map((step) => (
               <div key={step.phase} className="space-y-1.5">
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#171717]/50 dark:text-[#E8E6DF]/50">
@@ -188,13 +188,13 @@ export const VoidArchitectureDetails = forwardRef<HTMLDivElement, VoidArchitectu
           </div>
 
           {/* Design Decisions */}
-          <div className="pt-4 border-t border-[#E5E2DA] dark:border-[#2C2A26] space-y-3">
+          <div className="pt-4 border-t border-[var(--border)] dark:border-[#2C2A26] space-y-3">
             <h5 className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#171717]/60 dark:text-[#E8E6DF]/60">
               Verified Design Decisions
             </h5>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {architectureSummary.designDecisions.map((decision) => (
-                <div key={decision.topic} className="text-xs space-y-1 p-3 rounded-lg bg-black/[0.015] dark:bg-white/[0.015] border border-[#E5E2DA]/60 dark:border-[#2C2A26]/60">
+                <div key={decision.topic} className="text-xs space-y-1 p-3 rounded-lg bg-black/[0.015] dark:bg-white/[0.015] border border-[var(--border)]/60 dark:border-[#2C2A26]/60">
                   <div className="font-medium text-[#171717] dark:text-[#E8E6DF] flex items-center gap-1.5">
                     <ShieldAlert className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0" />
                     <span>{decision.topic}</span>

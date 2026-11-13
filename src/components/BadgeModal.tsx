@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, ExternalLink, ShieldCheck, FileText, CheckCircle2 } from 'lucide-react';
+import { X, Award, ExternalLink, ShieldCheck, FileText } from 'lucide-react';
 import { BadgeItem } from '../data/portfolioData';
 
 interface BadgeModalProps {
@@ -33,16 +33,30 @@ export const BadgeModal: React.FC<BadgeModalProps> = ({ badge, onClose }) => {
           <X className="w-5 h-5" />
         </button>
 
+        {badge.issuer === 'FreeAcademy AI' && badge.badgeImage && (
+          <img
+            src={badge.badgeImage}
+            alt={`${badge.title} certificate`}
+            className="mb-5 w-full rounded-xl border border-[var(--border)] object-contain"
+          />
+        )}
+
         {/* Badge Visual & Header */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 mb-5">
-          <div className="w-20 h-20 rounded-2xl bg-[var(--surface)] p-2.5 flex items-center justify-center border border-[var(--border)] shrink-0">
-            <img
-              src={badge.badgeImage}
-              alt={`${badge.title} badge`}
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-contain"
-            />
-          </div>
+          {badge.issuer !== 'FreeAcademy AI' && (
+            <div className="w-20 h-20 rounded-2xl bg-[var(--surface)] p-2.5 flex items-center justify-center border border-[var(--border)] shrink-0">
+              {badge.badgeImage ? (
+                <img
+                  src={badge.badgeImage}
+                  alt={`${badge.title} badge`}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <Award className="h-10 w-10 text-indigo-500" aria-hidden="true" />
+              )}
+            </div>
+          )}
 
           <div className="text-center sm:text-left flex-1">
             <div className="text-xs font-medium text-indigo-600 dark:text-indigo-400 mb-1">
@@ -95,7 +109,7 @@ export const BadgeModal: React.FC<BadgeModalProps> = ({ badge, onClose }) => {
             className="inline-flex items-center gap-2 px-5 py-2 font-medium text-white bg-neutral-900 dark:bg-white dark:text-neutral-900 rounded-full hover:opacity-90 transition-all shadow-xs"
           >
             <ShieldCheck className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
-            <span>Verify on Credly</span>
+            <span>{badge.issuer === 'FreeAcademy AI' ? 'Verify on FreeAcademy' : 'Verify on Credly'}</span>
             <ExternalLink className="w-3 h-3 opacity-70" />
           </a>
 

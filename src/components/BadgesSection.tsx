@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, ShieldCheck, FileCheck } from 'lucide-react';
+import { Award, ExternalLink, ShieldCheck, FileCheck } from 'lucide-react';
 import { BadgeItem, PROFILE_DATA } from '../data/portfolioData';
 
 interface BadgesSectionProps {
@@ -14,7 +14,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
   badges,
   onSelectBadge
 }) => {
-  const [filter, setFilter] = useState<'All' | 'Google Cloud' | 'MongoDB'>('All');
+  const [filter, setFilter] = useState<'All' | BadgeItem['issuer']>('All');
 
   // Deduplicate badges by credentialId or normalized title to ensure zero duplicates
   const normTitle = (s: string) => s.toLowerCase().replace(/skill\s*badge/gi, '').replace(/[^a-z0-9]/g, '');
@@ -43,10 +43,10 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
             CREDENTIALS & CERTIFICATIONS
           </p>
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal text-[var(--foreground)] tracking-tight">
-            MongoDB & Google Cloud <span className="animated-text-gradient italic">Badges</span>
+            Certificates & <span className="animated-text-gradient italic">Badges</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-[var(--muted)] max-w-2xl mx-auto mt-3">
-            Verified technical skill badges earned from MongoDB and Google Cloud.
+            Verified certificates and skill badges across AI, software development, and cloud technologies.
           </p>
 
           {/* Credly Link & Filter Pills */}
@@ -61,9 +61,19 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
               <span>Verify on Credly</span>
               <ExternalLink className="w-3.5 h-3.5 opacity-70" />
             </a>
+            <a
+              href="https://freeacademy.ai/home"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2 text-xs font-medium text-[var(--foreground)] bg-[var(--surface)] border border-[var(--border)] rounded-full hover:bg-[var(--surface-hover)] transition-all shadow-xs"
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <span>FreeAcademy AI</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+            </a>
 
             <div className="flex items-center gap-1.5 p-0.5 rounded-full border border-[var(--border)] bg-[var(--surface)]">
-              {(['All', 'Google Cloud', 'MongoDB'] as const).map((tab) => (
+              {(['All', 'Google Cloud', 'MongoDB', 'FreeAcademy AI'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setFilter(tab)}
@@ -91,13 +101,19 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
               <div>
                 {/* Header with Badge Image */}
                 <div className="flex items-start justify-between gap-4 mb-4">
-                  <div className="w-16 h-16 rounded-xl bg-[var(--surface)] p-2.5 flex items-center justify-center border border-[var(--border)] shrink-0 group-hover:scale-105 transition-transform">
-                    <img
-                      src={badge.badgeImage}
-                      alt={`${badge.title} badge`}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain"
-                    />
+                  <div className={`rounded-xl bg-[var(--surface)] flex items-center justify-center border border-[var(--border)] shrink-0 group-hover:scale-105 transition-transform overflow-hidden ${
+                    badge.issuer === 'FreeAcademy AI' ? 'w-24 h-16' : 'w-16 h-16 p-2.5'
+                  }`}>
+                    {badge.badgeImage ? (
+                      <img
+                        src={badge.badgeImage}
+                        alt={`${badge.title} certificate`}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-contain"
+                      />
+                    ) : (
+                      <Award className="h-8 w-8 text-indigo-500" aria-hidden="true" />
+                    )}
                   </div>
 
                   <div className="text-right">

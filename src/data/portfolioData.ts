@@ -1,10 +1,16 @@
 export interface BadgeItem {
   id: string;
   title: string;
-  issuer: 'Google Cloud' | 'MongoDB';
-  category: 'AI & Generative Models' | 'Database Architecture' | 'Cloud & Systems';
+  issuer: 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI';
+  category:
+    | 'AI & Generative Models'
+    | 'Database Architecture'
+    | 'Cloud & Systems'
+    | 'Programming & Development'
+    | 'AI & Design Tools'
+    | 'AI in Engineering';
   date: string;
-  badgeImage: string;
+  badgeImage?: string;
   pdfPath?: string;
   verifyUrl: string;
   credentialId?: string;
@@ -104,7 +110,7 @@ export const PROFILE_DATA = {
   },
   metrics: [
     { label: "Mobile Render Efficiency", value: "+30%", detail: "Heap allocation & rebuild reduction via BLoC isolation" },
-    { label: "Industry Credentials", value: "6", detail: "MongoDB & Google Cloud verified via Credly" },
+    { label: "Industry Credentials", value: "13", detail: "6 Credly badges + 7 FreeAcademy AI certificates" },
     { label: "App Store Deployments", value: "3", detail: "Apple App Store, Google Play, RuStore releases" },
     { label: "Language Proficiencies", value: "3", detail: "Arabic (Native), English (C1), Russian (C1)" },
   ],
@@ -224,6 +230,97 @@ export const PROFILE_DATA = {
       description: "Designing autonomous agent systems that leverage tool-use protocols, schema introspection, and automated verification loops over database operational layers.",
       keySkills: ["AI Code Agents", "Tool Calling / Function Calling", "Atlas Data API", "Autonomous Workflows"],
       highlight: false
+    },
+    {
+      id: "freeacademy-advanced-python",
+      title: "Advanced Python Programming",
+      issuer: "FreeAcademy AI",
+      category: "Programming & Development",
+      date: "Nov 13, 2026",
+      badgeImage: "/assets/certificates/freeacademy-advanced-python.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-APP-PW1QHX",
+      credentialId: "FA-2026-APP-PW1QHX",
+      description: "Certificate in advanced Python programming, covering language features and practical software development.",
+      keySkills: ["Python", "Object-Oriented Programming", "Data Structures", "Debugging", "Software Development"],
+      highlight: true
+    },
+    {
+      id: "freeacademy-how-llms-work",
+      title: "How LLMs Actually Work",
+      issuer: "FreeAcademy AI",
+      category: "AI & Generative Models",
+      date: "Nov 13, 2026",
+      badgeImage: "/assets/certificates/freeacademy-how-llms-work.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-MHLW-27M17O",
+      credentialId: "FA-2026-MHLW-27M17O",
+      description: "Course certificate covering the core concepts behind large language models and how they generate text.",
+      keySkills: ["Large Language Models", "Tokenization", "Transformer Architecture", "Text Generation", "Generative AI"],
+      highlight: true
+    },
+    {
+      id: "freeacademy-figma-ai",
+      title: "Figma AI: Design Faster",
+      issuer: "FreeAcademy AI",
+      category: "AI & Design Tools",
+      date: "Nov 12, 2026",
+      badgeImage: "/assets/certificates/freeacademy-figma-ai.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-MFAF-JK0NIM",
+      credentialId: "FA-2026-MFAF-JK0NIM",
+      description: "Course certificate on using Figma AI features to accelerate interface design and prototyping workflows.",
+      keySkills: ["Figma", "AI-Assisted Design", "UI Design", "Prototyping", "Design Workflow"],
+      highlight: false
+    },
+    {
+      id: "freeacademy-canva-ai",
+      title: "Canva AI for Non-Designers",
+      issuer: "FreeAcademy AI",
+      category: "AI & Design Tools",
+      date: "Nov 12, 2026",
+      badgeImage: "/assets/certificates/freeacademy-canva-ai.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-MCAF-DA1STY",
+      credentialId: "FA-2026-MCAF-DA1STY",
+      description: "Course certificate on using Canva AI tools to create and refine visual content without a professional design background.",
+      keySkills: ["Canva", "AI-Assisted Design", "Visual Content", "Graphic Design", "Generative AI"],
+      highlight: false
+    },
+    {
+      id: "freeacademy-debug-code-ai",
+      title: "Debug Any Code with AI",
+      issuer: "FreeAcademy AI",
+      category: "Programming & Development",
+      date: "Nov 12, 2026",
+      badgeImage: "/assets/certificates/freeacademy-debug-code-ai.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-MDCW-L9E6KS",
+      credentialId: "FA-2026-MDCW-L9E6KS",
+      description: "Course certificate on applying AI tools to investigate software defects and support debugging workflows.",
+      keySkills: ["AI-Assisted Debugging", "Root Cause Analysis", "Prompting", "Code Review", "Software Troubleshooting"],
+      highlight: true
+    },
+    {
+      id: "freeacademy-aerospace-ai",
+      title: "AI for Aerospace Mechanical Engineers",
+      issuer: "FreeAcademy AI",
+      category: "AI in Engineering",
+      date: "Nov 12, 2026",
+      badgeImage: "/assets/certificates/freeacademy-aerospace-ai.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-AFAM-79GNLW",
+      credentialId: "FA-2026-AFAM-79GNLW",
+      description: "Course certificate exploring applications of artificial intelligence in aerospace and mechanical engineering contexts.",
+      keySkills: ["Artificial Intelligence", "Aerospace Engineering", "Mechanical Engineering", "Engineering Applications", "Applied AI"],
+      highlight: false
+    },
+    {
+      id: "freeacademy-prompt-engineering",
+      title: "Prompt Engineering Course",
+      issuer: "FreeAcademy AI",
+      category: "AI & Generative Models",
+      date: "Nov 08, 2026",
+      badgeImage: "/assets/certificates/freeacademy-prompt-engineering.jpg",
+      verifyUrl: "https://freeacademy.ai/verify/FA-2026-PE-AOE5VO",
+      credentialId: "FA-2026-PE-AOE5VO",
+      description: "Course certificate in writing and refining prompts for clearer, more useful outputs from generative AI systems.",
+      keySkills: ["Prompt Engineering", "Generative AI", "Instruction Design", "LLM Interaction", "Output Evaluation"],
+      highlight: true
     }
   ] as BadgeItem[],
 
