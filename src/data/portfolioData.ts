@@ -97,8 +97,7 @@ export const PROFILE_DATA = {
   citizenship: "Egypt, Russia (Work permit: Russian Federation)",
   photoUrl: "/assets/aistudio/id_image_with_glasses_c91ad6c5.jpg",
   contact: {
-    email: "kauroah@gmail.com",
-    secondaryEmail: "ahmedabdelhady0246@gmail.com",
+    email: "ahmedabdelhady0246@gmail.com",
     phone: "+7 (996) 846-9573",
     telegram: "@xrotw",
     telegramUrl: "https://t.me/xrotw",
