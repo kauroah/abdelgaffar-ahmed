@@ -355,7 +355,7 @@ ${resume.languages}
                   <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-[var(--muted)] mt-3">
                     <span>Moscow, Russia</span>
                     <span>·</span>
-                    <span>{PROFILE_DATA.contact.secondaryEmail}</span>
+                    <span>{PROFILE_DATA.contact.email}</span>
                     <span>·</span>
                     <span>{PROFILE_DATA.contact.phone}</span>
                     <span>·</span>

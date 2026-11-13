@@ -101,13 +101,10 @@ export const ContactSection: React.FC = () => {
               </div>
               <div className="flex-1">
                 <div className="text-[11px] font-semibold text-[var(--muted)] uppercase tracking-wider">
-                  Primary Email
+                  Email
                 </div>
                 <div className="text-sm font-mono font-medium text-[var(--foreground)] mt-0.5">
                   {PROFILE_DATA.contact.email}
-                </div>
-                <div className="text-xs text-[var(--muted)] mt-1">
-                  Secondary: {PROFILE_DATA.contact.secondaryEmail}
                 </div>
               </div>
             </a>
@@ -241,7 +238,7 @@ export const ContactSection: React.FC = () => {
                       <div>
                         <span>{errorMsg}</span>{' '}
                         <a
-                          href={`mailto:${PROFILE_DATA.contact.secondaryEmail}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(formData.message)}`}
+                          href={`mailto:${PROFILE_DATA.contact.email}?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(formData.message)}`}
                           className="underline font-medium"
                         >
                           Open in mail app &rarr;
