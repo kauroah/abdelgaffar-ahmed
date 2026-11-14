@@ -1,9 +1,19 @@
 import { Resend } from 'resend';
+import { readBoundedJson } from '../_shared/requestBody';
+import {
+  consumeLimits,
+  createUsageGate,
+  tooManyRequests,
+  type D1Database,
+  type UsageGate,
+  type UsageDecision,
+} from '../_shared/usageLimits';
 
 interface Env {
   RESEND_API_KEY?: string;
   RESEND_FROM?: string;
   CONTACT_EMAIL_TO?: string;
+  API_LIMITS_DB?: D1Database;
 }
 
 interface PagesFunctionContext {
@@ -42,7 +52,16 @@ function parseContactMessage(body: unknown): ContactMessage | null {
     : 'Portfolio Inquiry';
   const message = typeof input.message === 'string' ? input.message.trim() : '';
 
-  if (!name || !email || !message || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (
+    !name ||
+    name.length > 80 ||
+    !email ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+    subject.length > 120 ||
+    !message ||
+    message.length > 4000
+  ) {
     return null;
   }
 
@@ -96,15 +115,20 @@ function createEmailHtml(contact: ContactMessage, logoUrl: string): string {
 </html>`;
 }
 
-async function handleContact(request: Request, env: Env): Promise<Response> {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
+export async function handleContact(
+  request: Request,
+  env: Env,
+  usageGate: UsageGate = createUsageGate(env.API_LIMITS_DB),
+): Promise<Response> {
+  const parsedBody = await readBoundedJson(request, 8 * 1024);
+  if (!parsedBody.ok && parsedBody.reason === 'too_large') {
+    return jsonResponse({ ok: false, error: 'Your message is too large.' }, 413);
+  }
+  if (!parsedBody.ok) {
     return jsonResponse({ ok: false, error: 'Please submit a valid message.' }, 400);
   }
 
-  const contact = parseContactMessage(body);
+  const contact = parseContactMessage(parsedBody.value);
   if (!contact) {
     return jsonResponse({
       ok: false,
@@ -121,6 +145,34 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
       reason: 'resend_unconfigured',
       error: 'Email delivery is not configured yet. Please use the direct email link instead.',
     }, 503);
+  }
+
+  let decision: UsageDecision;
+  try {
+    decision = await consumeLimits(usageGate, request, [
+      { key: 'contact:ip:15m', limit: 3, windowMs: 15 * 60 * 1000 },
+      { key: 'contact:ip:24h', limit: 10, windowMs: 24 * 60 * 60 * 1000 },
+      {
+        key: 'contact:global:24h',
+        limit: 50,
+        windowMs: 24 * 60 * 60 * 1000,
+        units: 1,
+        global: true,
+      },
+    ]);
+  } catch {
+    console.error('[Contact] Usage protection is unavailable.');
+    return jsonResponse({
+      ok: false,
+      reason: 'usage_limits_unavailable',
+      error: 'Message delivery is temporarily unavailable. Please try emailing directly.',
+    }, 503);
+  }
+  if (!decision.allowed) {
+    return tooManyRequests({
+      ok: false,
+      error: 'Too many messages were sent. Please try again later.',
+    }, decision.retryAfterSeconds);
   }
 
   const resend = new Resend(apiKey);

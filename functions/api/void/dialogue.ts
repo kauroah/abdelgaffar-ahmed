@@ -1,9 +1,19 @@
 import { GoogleGenAI } from '@google/genai';
 import { VOID_PROJECT_DATA } from '../../../src/data/voidProjectData';
+import { readBoundedJson } from '../../_shared/requestBody';
+import {
+  consumeLimits,
+  createUsageGate,
+  tooManyRequests,
+  type D1Database,
+  type UsageDecision,
+  type UsageGate,
+} from '../../_shared/usageLimits';
 
 interface Env {
   GEMINI_API_KEY?: string;
   FISH_API_KEY?: string;
+  API_LIMITS_DB?: D1Database;
 }
 
 interface DialogueTurnInput {
@@ -72,7 +82,10 @@ async function synthesizeGemini(
 ): Promise<SynthesizedAudio> {
   const ai = new GoogleGenAI({
     apiKey,
-    httpOptions: { headers: { 'User-Agent': 'aistudio-build' } },
+    httpOptions: {
+      apiVersion: 'v1beta',
+      headers: { 'User-Agent': 'aistudio-build' },
+    },
   });
   const voiceName = speaker === 'Ahmed' ? 'Puck' : 'Charon';
   const defaultStyle = speaker === 'Ahmed'
@@ -85,18 +98,25 @@ async function synthesizeGemini(
 
   for (const model of models) {
     try {
-      const response = await ai.models.generateContent({
+      const response = await ai.interactions.create({
         model,
-        contents: [{
-          role: 'user',
-          parts: [{ text, speechMetadata: { style: style || defaultStyle } }],
+        input: [{
+          type: 'user_input',
+          content: [{
+            type: 'text',
+            text,
+            annotations: [{
+              type: 'speech_metadata',
+              style: style || defaultStyle,
+            }],
+          }],
         }],
-        config: {
-          responseModalities: ['AUDIO'],
-          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName } } },
+        response_format: { type: 'audio' },
+        generation_config: {
+          speech_config: [{ voice: voiceName }],
         },
       });
-      const audioBase64 = response.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data;
+      const audioBase64 = response.output_audio?.data;
       if (audioBase64) return { mimeType: 'audio/wav', audioBase64 };
       lastError = new Error(`${model} returned no audio`);
     } catch (error) {
@@ -139,19 +159,41 @@ function cachedAudio(key: string): SynthesizedAudio | undefined {
   return cached.audio;
 }
 
+function estimateProviderAttempts(
+  scenarioId: string,
+  geminiKey: string | undefined,
+  fishKey: string | undefined,
+): number {
+  const scenario = VOID_PROJECT_DATA.scenarios.find(({ id }) => id === scenarioId);
+  if (!scenario) return 0;
+
+  return scenario.turns.reduce((attempts, turn) => {
+    const useFish = turn.speaker === 'VOID' && Boolean(fishKey);
+    const cacheKey = `${scenarioId}:${turn.id}:${useFish ? 'fish' : 'gemini'}`;
+    if (cachedAudio(cacheKey)) return attempts;
+    if (useFish) return attempts + 1 + (geminiKey ? 2 : 0);
+    return attempts + (geminiKey ? 2 : 0);
+  }, 0);
+}
+
 export async function handleDialogueRequest(
   request: Request,
   env: Env,
   providerOverrides: Providers = providers,
+  usageGate: UsageGate = createUsageGate(env.API_LIMITS_DB),
 ): Promise<Response> {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
+  const parsedBody = await readBoundedJson(request, 12 * 1024);
+  if (!parsedBody.ok && parsedBody.reason === 'too_large') {
+    return Response.json({
+      available: false,
+      error: 'The dialogue request is too large.',
+    }, { status: 413 });
+  }
+  if (!parsedBody.ok) {
     return Response.json({ available: false, error: 'Please submit a valid dialogue request.' }, { status: 400 });
   }
 
-  const parsed = parseTurns(body);
+  const parsed = parseTurns(parsedBody.value);
   if (!parsed) {
     return Response.json({ available: false, error: 'Unknown scenario or invalid dialogue turns.' }, { status: 400 });
   }
@@ -163,6 +205,40 @@ export async function handleDialogueRequest(
   }
 
   const scenario = VOID_PROJECT_DATA.scenarios.find(({ id }) => id === parsed.scenarioId)!;
+  const providerAttempts = estimateProviderAttempts(parsed.scenarioId, geminiKey, fishKey);
+  let decision: UsageDecision;
+  try {
+    decision = await consumeLimits(usageGate, request, [
+      { key: 'void:ip:10m', limit: 2, windowMs: 10 * 60 * 1000 },
+      { key: 'void:ip:24h', limit: 5, windowMs: 24 * 60 * 60 * 1000 },
+    ]);
+    if (decision.allowed && providerAttempts > 0) {
+      decision = await consumeLimits(usageGate, null, [
+        {
+          key: 'void:provider-attempts:24h',
+          limit: 120,
+          windowMs: 24 * 60 * 60 * 1000,
+          units: providerAttempts,
+          global: true,
+        },
+      ]);
+    }
+  } catch {
+    console.error('[VOID TTS] Usage protection is unavailable.');
+    return Response.json({
+      available: false,
+      reason: 'usage_limits_unavailable',
+      error: 'Audio generation is temporarily unavailable.',
+    }, { status: 503 });
+  }
+  if (!decision.allowed) {
+    return tooManyRequests({
+      available: false,
+      reason: 'rate_limited',
+      error: 'Audio generation is temporarily limited. Please try again later.',
+    }, decision.retryAfterSeconds);
+  }
+
   const usedProviders = new Set<string>();
   const failedTurns: string[] = [];
   const audioTurns: AudioTurn[] = await Promise.all(scenario.turns.map(async (turn) => {

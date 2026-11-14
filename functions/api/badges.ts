@@ -1,4 +1,12 @@
 import { PROFILE_DATA, type BadgeItem } from '../../src/data/portfolioData';
+import {
+  consumeLimits,
+  createUsageGate,
+  tooManyRequests,
+  type D1Database,
+  type UsageDecision,
+  type UsageGate,
+} from '../_shared/usageLimits';
 
 const CREDLY_USERNAME = 'ahmed-abdelgaffar';
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
@@ -25,6 +33,16 @@ interface CredlyBadge {
 }
 
 let badgeCache: BadgeCache = { lastSyncTime: 0, badges: BASELINE_BADGES };
+
+interface Env {
+  API_LIMITS_DB?: D1Database;
+  BADGES_SYNC_TOKEN?: string;
+}
+
+interface PagesFunctionContext {
+  env: Env;
+  request: Request;
+}
 
 function normalizeTitle(title: string): string {
   return title.toLowerCase().replace(/skill\s*badge/gi, '').replace(/[^a-z0-9]/g, '');
@@ -142,8 +160,32 @@ async function syncCredlyBadges(
 export async function handleBadgesGet(
   request: Request,
   fetcher: typeof fetch = fetch,
+  usageGate: UsageGate = createUsageGate(),
 ): Promise<Response> {
   const force = new URL(request.url).searchParams.get('force') === 'true';
+  if (force) {
+    let decision: UsageDecision;
+    try {
+      decision = await consumeLimits(usageGate, request, [
+        { key: 'badges:force:ip:15m', limit: 1, windowMs: 15 * 60 * 1000 },
+        { key: 'badges:force:ip:24h', limit: 4, windowMs: 24 * 60 * 60 * 1000 },
+        { key: 'badges:force:global:1h', limit: 12, windowMs: 60 * 60 * 1000, global: true },
+      ]);
+    } catch {
+      console.error('[Credly Sync] Usage protection is unavailable.');
+      return Response.json({
+        status: 'error',
+        message: 'Badge refresh is temporarily unavailable.',
+      }, { status: 503 });
+    }
+    if (!decision.allowed) {
+      return tooManyRequests({
+        status: 'rate_limited',
+        message: 'Badge refresh is temporarily limited. Please try again later.',
+      }, decision.retryAfterSeconds);
+    }
+  }
+
   const result = await syncCredlyBadges(force, fetcher);
   return Response.json({
     status: result.error ? 'fallback' : 'success',
@@ -158,7 +200,87 @@ export async function handleBadgesGet(
   });
 }
 
-export async function handleBadgesSync(fetcher: typeof fetch = fetch): Promise<Response> {
+async function tokensMatch(provided: string, expected: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const [providedDigest, expectedDigest] = await Promise.all([
+    crypto.subtle.digest('SHA-256', encoder.encode(provided)),
+    crypto.subtle.digest('SHA-256', encoder.encode(expected)),
+  ]);
+  const providedBytes = new Uint8Array(providedDigest);
+  const expectedBytes = new Uint8Array(expectedDigest);
+  let difference = 0;
+  for (let index = 0; index < providedBytes.length; index += 1) {
+    difference |= providedBytes[index] ^ expectedBytes[index];
+  }
+  return difference === 0;
+}
+
+export async function handleBadgesSync(
+  request: Request,
+  env: Env,
+  fetcher: typeof fetch = fetch,
+  usageGate: UsageGate = createUsageGate(env.API_LIMITS_DB),
+): Promise<Response> {
+  const expectedToken = env.BADGES_SYNC_TOKEN?.trim();
+  if (!expectedToken || expectedToken.length < 32 || /^your_|^my_/i.test(expectedToken)) {
+    return Response.json({
+      status: 'error',
+      reason: 'sync_unconfigured',
+      message: 'Badge synchronization is not configured.',
+    }, { status: 503 });
+  }
+
+  let decision: UsageDecision;
+  try {
+    decision = await consumeLimits(usageGate, request, [
+      { key: 'badges:sync-auth:ip:5m', limit: 10, windowMs: 5 * 60 * 1000 },
+    ]);
+  } catch {
+    console.error('[Credly Sync] Usage protection is unavailable.');
+    return Response.json({
+      status: 'error',
+      reason: 'usage_limits_unavailable',
+      message: 'Badge synchronization is temporarily unavailable.',
+    }, { status: 503 });
+  }
+  if (!decision.allowed) {
+    return tooManyRequests({
+      status: 'rate_limited',
+      message: 'Badge synchronization is temporarily limited. Please try again later.',
+    }, decision.retryAfterSeconds);
+  }
+
+  const authorization = request.headers.get('Authorization') || '';
+  const match = /^Bearer\s+(.+)$/i.exec(authorization);
+  if (!match || !(await tokensMatch(match[1].trim(), expectedToken))) {
+    return Response.json({
+      status: 'error',
+      reason: 'unauthorized',
+      message: 'Authorization is required.',
+    }, { status: 401 });
+  }
+
+  try {
+    decision = await consumeLimits(usageGate, request, [
+      { key: 'badges:sync:ip:5m', limit: 1, windowMs: 5 * 60 * 1000 },
+      { key: 'badges:sync:ip:24h', limit: 4, windowMs: 24 * 60 * 60 * 1000 },
+      { key: 'badges:sync:global:1h', limit: 12, windowMs: 60 * 60 * 1000, global: true },
+    ]);
+  } catch {
+    console.error('[Credly Sync] Usage protection is unavailable.');
+    return Response.json({
+      status: 'error',
+      reason: 'usage_limits_unavailable',
+      message: 'Badge synchronization is temporarily unavailable.',
+    }, { status: 503 });
+  }
+  if (!decision.allowed) {
+    return tooManyRequests({
+      status: 'rate_limited',
+      message: 'Badge synchronization is temporarily limited. Please try again later.',
+    }, decision.retryAfterSeconds);
+  }
+
   const result = await syncCredlyBadges(true, fetcher);
   if (result.error) {
     return Response.json({
@@ -179,9 +301,5 @@ export async function handleBadgesSync(fetcher: typeof fetch = fetch): Promise<R
   });
 }
 
-interface PagesFunctionContext {
-  request: Request;
-}
-
-export const onRequestGet = ({ request }: PagesFunctionContext): Promise<Response> =>
-  handleBadgesGet(request);
+export const onRequestGet = ({ request, env }: PagesFunctionContext): Promise<Response> =>
+  handleBadgesGet(request, fetch, createUsageGate(env.API_LIMITS_DB));

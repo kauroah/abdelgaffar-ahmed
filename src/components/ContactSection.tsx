@@ -179,6 +179,7 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="text"
                         required
+                        maxLength={80}
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         placeholder="e.g. Alexey Ivanov"
@@ -193,6 +194,7 @@ export const ContactSection: React.FC = () => {
                       <input
                         type="email"
                         required
+                        maxLength={254}
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         placeholder="alexey@company.com"
@@ -225,6 +227,7 @@ export const ContactSection: React.FC = () => {
                     <textarea
                       required
                       rows={4}
+                      maxLength={4000}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Tell me about your team, system requirements, or project scope..."

@@ -9,13 +9,30 @@ vi.mock('resend', () => ({
 }));
 
 import { onRequestGet as healthGet } from '../functions/api/health';
-import { onRequestPost as contactPost } from '../functions/api/contact';
+import { handleContact, onRequestPost as contactPost } from '../functions/api/contact';
 import { handleBadgesGet, handleBadgesSync } from '../functions/api/badges';
 import {
   clearDialogueAudioCache,
   handleDialogueRequest,
 } from '../functions/api/void/dialogue';
 import { VOID_PROJECT_DATA } from '../src/data/voidProjectData';
+import type { UsageDecision, UsageGate } from '../functions/_shared/usageLimits';
+
+function createUsageGate(decision: UsageDecision = { allowed: true, retryAfterSeconds: 0 }): UsageGate {
+  return { consume: vi.fn(async () => decision) };
+}
+
+const syncToken = 'test-sync-token-012345678901234567890123';
+
+function syncRequest(token = syncToken): Request {
+  return new Request('https://portfolio.test/api/badges/sync', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'CF-Connecting-IP': '192.0.2.10',
+    },
+  });
+}
 
 describe('Cloudflare Pages API routes', () => {
   beforeEach(() => {
@@ -43,6 +60,8 @@ describe('Cloudflare Pages API routes', () => {
         fishAudio: false,
         resend: true,
         contactRecipient: true,
+        badgeSync: false,
+        usageLimits: false,
       },
     });
   });
@@ -65,6 +84,8 @@ describe('Cloudflare Pages API routes', () => {
         fishAudio: false,
         resend: false,
         contactRecipient: true,
+        badgeSync: false,
+        usageLimits: false,
       },
     });
   });
@@ -90,6 +111,20 @@ describe('Cloudflare Pages API routes', () => {
     });
     expect(missingConfig.status).toBe(503);
     await expect(missingConfig.json()).resolves.toMatchObject({ reason: 'resend_unconfigured' });
+
+    const oversized = await contactPost({
+      request: new Request('https://portfolio.test/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'Test',
+          email: 'test@example.com',
+          message: 'x'.repeat(9000),
+        }),
+      }),
+      env: {},
+    });
+    expect(oversized.status).toBe(413);
   });
 
   it('sends the branded contact template and handles Resend provider errors', async () => {
@@ -109,9 +144,17 @@ describe('Cloudflare Pages API routes', () => {
       RESEND_FROM: 'Portfolio <onboarding@resend.dev>',
       CONTACT_EMAIL_TO: 'owner@example.com',
     };
-    const success = await contactPost({ request: request(), env });
+    const usageGate = createUsageGate();
+    const success = await handleContact(request(), env, usageGate);
 
     expect(success.status).toBe(200);
+    expect(usageGate.consume).toHaveBeenCalledWith(
+      null,
+      'contact:global:24h',
+      50,
+      24 * 60 * 60 * 1000,
+      1,
+    );
     await expect(success.json()).resolves.toEqual({ ok: true, messageId: 'email-test-id' });
     const sentEmail = sendMock.mock.calls[0][0];
     expect(sentEmail.html).toContain('Ahmed Abdelgaffar');
@@ -120,15 +163,44 @@ describe('Cloudflare Pages API routes', () => {
     expect(sentEmail.html).not.toContain('<script>');
 
     sendMock.mockResolvedValueOnce({ data: null, error: { message: 'provider unavailable' } });
-    const failed = await contactPost({ request: request(), env });
+    const failed = await handleContact(request(), env, createUsageGate());
     expect(failed.status).toBe(502);
+  });
+
+  it('fails closed when the persistent usage database is unavailable', async () => {
+    const response = await handleContact(
+      new Request('https://portfolio.test/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': '192.0.2.10',
+        },
+        body: JSON.stringify({
+          name: 'Test Sender',
+          email: 'sender@example.com',
+          message: 'Hello',
+        }),
+      }),
+      {
+        RESEND_API_KEY: 'resend-secret',
+        RESEND_FROM: 'Portfolio <onboarding@resend.dev>',
+        CONTACT_EMAIL_TO: 'owner@example.com',
+      },
+    );
+
+    expect(response.status).toBe(503);
+    await expect(response.json()).resolves.toMatchObject({ reason: 'usage_limits_unavailable' });
+    expect(sendMock).not.toHaveBeenCalled();
   });
 
   it('returns Credly baseline badges after a provider failure and reports sync failure', async () => {
     const failingFetch = vi.fn(async () => new Response('unavailable', { status: 503 }));
     const response = await handleBadgesGet(
-      new Request('https://portfolio.test/api/badges?force=true'),
+      new Request('https://portfolio.test/api/badges?force=true', {
+        headers: { 'CF-Connecting-IP': '192.0.2.10' },
+      }),
       failingFetch as typeof fetch,
+      createUsageGate(),
     );
     const body = await response.json();
 
@@ -137,7 +209,12 @@ describe('Cloudflare Pages API routes', () => {
     expect(body.fromCache).toBe(true);
     expect(body.badges.length).toBeGreaterThan(0);
 
-    const syncResponse = await handleBadgesSync(failingFetch as typeof fetch);
+    const syncResponse = await handleBadgesSync(
+      syncRequest(),
+      { BADGES_SYNC_TOKEN: syncToken },
+      failingFetch as typeof fetch,
+      createUsageGate(),
+    );
     expect(syncResponse.status).toBe(502);
   });
 
@@ -156,12 +233,45 @@ describe('Cloudflare Pages API routes', () => {
       }],
     }));
 
-    const response = await handleBadgesSync(fetcher as typeof fetch);
+    const response = await handleBadgesSync(
+      syncRequest(),
+      { BADGES_SYNC_TOKEN: syncToken },
+      fetcher as typeof fetch,
+      createUsageGate(),
+    );
     const body = await response.json();
     expect(response.status).toBe(200);
     expect(body.status).toBe('success');
     expect(body.badges.some((badge: { credentialId?: string }) => badge.credentialId === 'credential-123')).toBe(true);
     expect(body.badges.length).toBeGreaterThan(1);
+  });
+
+  it('requires badge-sync authentication and blocks refreshes at the configured limit', async () => {
+    const fetcher = vi.fn(async () => Response.json({ data: [] }));
+    const env = { BADGES_SYNC_TOKEN: syncToken };
+
+    const unauthorized = await handleBadgesSync(
+      syncRequest('incorrect-token'),
+      env,
+      fetcher as typeof fetch,
+      createUsageGate(),
+    );
+    expect(unauthorized.status).toBe(401);
+    expect(fetcher).not.toHaveBeenCalled();
+
+    const limited = await handleBadgesGet(
+      new Request('https://portfolio.test/api/badges?force=true', {
+        headers: { 'CF-Connecting-IP': '192.0.2.10' },
+      }),
+      fetcher as typeof fetch,
+      createUsageGate({ allowed: false, retryAfterSeconds: 47 }),
+    );
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get('Retry-After')).toBe('47');
+    expect(fetcher).not.toHaveBeenCalled();
+
+    const unconfigured = await handleBadgesSync(syncRequest(), {}, fetcher as typeof fetch);
+    expect(unconfigured.status).toBe(503);
   });
 
   it('validates dialogue requests and returns an explicit missing-credentials response', async () => {
@@ -194,7 +304,10 @@ describe('Cloudflare Pages API routes', () => {
     const scenario = VOID_PROJECT_DATA.scenarios[0];
     const request = () => new Request('https://portfolio.test/api/void/dialogue', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'CF-Connecting-IP': '192.0.2.10',
+      },
       body: JSON.stringify({
         scenarioId: scenario.id,
         turns: scenario.turns.map(({ id, speaker }) => ({ id, speaker, text: 'untrusted client text' })),
@@ -204,13 +317,22 @@ describe('Cloudflare Pages API routes', () => {
       gemini: vi.fn(async () => ({ mimeType: 'audio/wav', audioBase64: 'Z2VtaW5p' })),
       fish: vi.fn(async () => ({ mimeType: 'audio/mpeg', audioBase64: 'ZmlzaA==' })),
     };
+    const usageGate = createUsageGate();
     const success = await handleDialogueRequest(
       request(),
       { GEMINI_API_KEY: 'real-gemini-key' },
       successfulProviders,
+      usageGate,
     );
     const successBody = await success.json();
     expect(successBody.available).toBe(true);
+    expect(usageGate.consume).toHaveBeenCalledWith(
+      null,
+      'void:provider-attempts:24h',
+      120,
+      24 * 60 * 60 * 1000,
+      scenario.turns.length * 2,
+    );
     expect(successBody.turns.every((turn: { audioBase64: string }) => turn.audioBase64 === 'Z2VtaW5p')).toBe(true);
     expect(successfulProviders.gemini).toHaveBeenCalledWith(
       'Ahmed',
@@ -228,6 +350,7 @@ describe('Cloudflare Pages API routes', () => {
       request(),
       { GEMINI_API_KEY: 'real-gemini-key' },
       failingProviders,
+      createUsageGate(),
     );
     const failedBody = await failed.json();
     expect(failed.status).toBe(200);
@@ -239,7 +362,10 @@ describe('Cloudflare Pages API routes', () => {
     const scenario = VOID_PROJECT_DATA.scenarios[0];
     const request = () => new Request('https://portfolio.test/api/void/dialogue', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'CF-Connecting-IP': '192.0.2.10',
+      },
       body: JSON.stringify({
         scenarioId: scenario.id,
         turns: scenario.turns.map(({ id, speaker }) => ({ id, speaker })),
@@ -254,6 +380,7 @@ describe('Cloudflare Pages API routes', () => {
       request(),
       { GEMINI_API_KEY: 'gemini-key', FISH_API_KEY: 'fish-key' },
       providerOverrides,
+      createUsageGate(),
     );
     const body = await response.json();
 
@@ -261,5 +388,72 @@ describe('Cloudflare Pages API routes', () => {
     expect(body.engine).toBe('gemini');
     expect(providerOverrides.fish).toHaveBeenCalled();
     expect(providerOverrides.gemini).toHaveBeenCalled();
+  });
+
+  it('blocks dialogue generation when the per-client usage limit is reached', async () => {
+    const scenario = VOID_PROJECT_DATA.scenarios[0];
+    const request = new Request('https://portfolio.test/api/void/dialogue', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'CF-Connecting-IP': '192.0.2.10',
+      },
+      body: JSON.stringify({
+        scenarioId: scenario.id,
+        turns: scenario.turns.map(({ id, speaker }) => ({ id, speaker })),
+      }),
+    });
+    const providers = {
+      gemini: vi.fn(async () => ({ mimeType: 'audio/wav', audioBase64: 'Z2VtaW5p' })),
+      fish: vi.fn(async () => ({ mimeType: 'audio/mpeg', audioBase64: 'ZmlzaA==' })),
+    };
+
+    const response = await handleDialogueRequest(
+      request,
+      { GEMINI_API_KEY: 'real-gemini-key' },
+      providers,
+      createUsageGate({ allowed: false, retryAfterSeconds: 93 }),
+    );
+
+    expect(response.status).toBe(429);
+    expect(response.headers.get('Retry-After')).toBe('93');
+    expect(providers.gemini).not.toHaveBeenCalled();
+    expect(providers.fish).not.toHaveBeenCalled();
+  });
+
+  it('fails closed without D1 and rejects oversized dialogue requests', async () => {
+    const scenario = VOID_PROJECT_DATA.scenarios[0];
+    const body = JSON.stringify({
+      scenarioId: scenario.id,
+      turns: scenario.turns.map(({ id, speaker }) => ({ id, speaker })),
+    });
+    const providers = {
+      gemini: vi.fn(async () => ({ mimeType: 'audio/wav', audioBase64: 'Z2VtaW5p' })),
+      fish: vi.fn(async () => ({ mimeType: 'audio/mpeg', audioBase64: 'ZmlzaA==' })),
+    };
+
+    const unconfigured = await handleDialogueRequest(
+      new Request('https://portfolio.test/api/void/dialogue', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'CF-Connecting-IP': '192.0.2.10',
+        },
+        body,
+      }),
+      { GEMINI_API_KEY: 'real-gemini-key' },
+      providers,
+    );
+    expect(unconfigured.status).toBe(503);
+    expect(providers.gemini).not.toHaveBeenCalled();
+
+    const oversized = await handleDialogueRequest(
+      new Request('https://portfolio.test/api/void/dialogue', {
+        method: 'POST',
+        body: JSON.stringify({ scenarioId: scenario.id, turns: [], padding: 'x'.repeat(13 * 1024) }),
+      }),
+      {},
+    );
+    expect(oversized.status).toBe(413);
   });
 });
