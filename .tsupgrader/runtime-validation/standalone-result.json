@@ -1,13 +1,13 @@
 {
-  "planHash": "f6fb140eb0e1e85f2711a53ec829e7b41b15944a26a564e5541ec7b59e2e0437",
+  "planHash": "597d434f2807f21253544ce7b0b42df31f538bdf7eaa2a0747357428a2f30034",
   "phase": "standalone",
-  "recordedAtUtc": "2026-11-12T21:57:16.9431056Z",
+  "recordedAtUtc": "2026-11-14T11:23:09.6707917Z",
   "retryCount": 0,
   "resetBaseline": false,
   "complete": true,
   "result": {
     "setupSucceeded": true,
-    "setupDurationMs": 1665,
+    "setupDurationMs": 16820,
     "setupFailureOutput": null,
     "assertions": [
       {
@@ -20,7 +20,7 @@
         "skippedReason": null,
         "exitCode": 0,
         "outputSample": "\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 lint\r\n\u003E tsc --noEmit\r\n\r\n",
-        "durationMs": 764
+        "durationMs": 827
       },
       {
         "name": "tests-pass",
@@ -31,13 +31,13 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": 0,
-        "outputSample": "\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 test\r\n\u003E vitest run\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\r\n RUN  v5.1.0 E:/IMP/portfolio\r\n\r\n\r\n Test Files  1 passed (1)\r\n      Tests  3 passed (3)\r\n   Start at  00:57:10\r\n   Duration  272ms (transform 54%, import 28%, worker 11%, tests 7%)\r\n\r\n",
-        "durationMs": 1364,
+        "outputSample": "\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 test\r\n\u003E vitest run\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\r\n RUN  v5.1.0 E:/IMP/portfolio\r\n\r\n\r\n Test Files  2 passed (2)\r\n      Tests  16 passed (16)\r\n   Start at  14:23:00\r\n   Duration  707ms (import 52%, transform 35%, tests 10%, worker 3%)\r\n\r\n",
+        "durationMs": 1918,
         "testResults": {
           "testFramework": "vitest",
           "runnerDetectedFrom": "package_json",
-          "testsTotal": 3,
-          "testsPassed": 3,
+          "testsTotal": 16,
+          "testsPassed": 16,
           "testsFailed": 0,
           "testsSkipped": 0,
           "parseFailed": false
@@ -52,8 +52,8 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": 0,
-        "outputSample": "\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 build\r\n\u003E vite build\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\u001B[36mvite v8.3.6 \u001B[32mbuilding client environment for production...\u001B[36m\u001B[39m\r\ntransforming...\r\n\u2713 1882 modules transformed.\r\nrendering chunks...\r\ncomputing gzip size...\r\ndist/index.html                        1.74 kB \u2502 gzip:   0.84 kB\r\ndist/assets/index-BVnTmMdi.css        66.66 kB \u2502 gzip:  11.37 kB\r\ndist/assets/purify.es-Dqk5qvad.js     29.02 kB \u2502 gzip:  11.45 kB\r\ndist/assets/index.es-K2FDoceS.js     151.37 kB \u2502 gzip:  48.88 kB\r\ndist/assets/html2canvas-9WZ0cupB.js  199.39 kB \u2502 gzip:  46.73 kB\r\ndist/assets/index-C0z0AHFH.js        802.95 kB \u2502 gzip: 245.88 kB\r\n\r\n\u001B[33m[plugin builtin:vite-reporter] \r\n(!) Some chunks are larger than 500 kB after minification. Consider:\r\n- Using dynamic import() to code-split the application\r\n- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting\r\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001B[39m\r\n\u001B[32m\u2713 built in 971ms\u001B[39m\r\n",
-        "durationMs": 1864
+        "outputSample": "\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 build\r\n\u003E vite build\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\u001B[36mvite v8.3.6 \u001B[32mbuilding client environment for production...\u001B[36m\u001B[39m\r\ntransforming...\r\n\u2713 2287 modules transformed.\r\nrendering chunks...\r\ncomputing gzip size...\r\ndist/index.html                        1.85 kB \u2502 gzip:   0.87 kB\r\ndist/assets/index-DY5P56ur.css        73.28 kB \u2502 gzip:  12.41 kB\r\ndist/assets/purify.es-Dqk5qvad.js     29.02 kB \u2502 gzip:  11.45 kB\r\ndist/assets/index.es-Beg7K4-F.js     151.37 kB \u2502 gzip:  48.88 kB\r\ndist/assets/html2canvas-7qFTK-WL.js  199.39 kB \u2502 gzip:  46.73 kB\r\ndist/assets/index-Bo4WRyvp.js        953.69 kB \u2502 gzip: 294.55 kB\r\n\r\n\u001B[33m[plugin builtin:vite-reporter] \r\n(!) Some chunks are larger than 500 kB after minification. Consider:\r\n- Using dynamic import() to code-split the application\r\n- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting\r\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001B[39m\r\n\u001B[32m\u2713 built in 1.13s\u001B[39m\r\n",
+        "durationMs": 2091
       },
       {
         "name": "development-homepage",
@@ -64,8 +64,8 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": null,
-        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml lang=\u0022en\u0022 class=\u0022scroll-smooth\u0022\u003E\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\n    \u003Ctitle\u003EAhmed Abdelgaffar | Full-Stack, Java \u0026 Mobile Engineer\u003C/title\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022/assets/aistudio/monogram_logo_vector_9faf5d59.svg\u0022 /\u003E\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Portfolio of Ahmed Abdelgaffar \u2013 Full-Stack, Java Distributed Systems \u0026 Flutter Engineer. Verified MongoDB \u0026 Google Cloud Skill Badges, production projects, and interactive CV customizer.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:title\u0022 content=\u0022Ahmed Abdelgaffar | Full-Stack, Java \u0026 Mobile Engineer\u0022 /\u003E\n    \u003Cmeta property=\u0022og:description\u0022 content=\u0022Explore production projects in Spring Boot, Next.js, and Flutter, verified MongoDB \u0026 Google Cloud credentials, and customized ATS CV templates.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:type\u0022 content=\u0022website\u0022 /\u003E\n    \u003Cmeta name=\u0022twitter:card\u0022 content=\u0022summary_large_image\u0022 /\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.googleapis.com\u0022\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.gstatic.com\u0022 crossorigin\u003E\n    \u003Clink href=\u0022https://fonts.googleapis.com/css2?family=Instrument\u002BSerif:ital@0;1\u0026family=JetBrains\u002BMono:wght@400;500;600\u0026family=Outfit:wght@300;400;500;600;700;800\u0026family=Plus\u002BJakarta\u002BSans:wght@300;400;500;600;700\u0026display=swap\u0022 rel=\u0022stylesheet\u0022\u003E\n  \u003C/head\u003E\n  \u003Cbody class=\u0022bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black\u0022\u003E\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\n    \u003Cscript type=\u0022module\u0022 src=\u0022/src/main.tsx\u0022\u003E\u003C/script\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n--- server output ---\n\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 dev\r\n\u003E tsx server.ts\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\u001B[31mWebSocket server error: Port 24678 is already in use\u001B[39m\r\nServer running at http://0.0.0.0:3100\r\n",
-        "durationMs": 2072
+        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml lang=\u0022en\u0022 class=\u0022scroll-smooth\u0022\u003E\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003Eimport { injectIntoGlobalHook } from \u0022/@react-refresh\u0022;\ninjectIntoGlobalHook(window);\nwindow.$RefreshReg$ = () =\u003E {};\nwindow.$RefreshSig$ = () =\u003E (type) =\u003E type;\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\n    \u003Ctitle\u003EAhmed Abdelgaffar | Flutter \u0026amp; Applied AI Engineer\u003C/title\u003E\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Portfolio of Ahmed Abdelgaffar \u2013 Flutter Mobile Architect \u0026amp; Applied AI Engineer. Production mobile apps on App Store/Google Play, real-time voice agents, ONNX inference, and RAG systems.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:title\u0022 content=\u0022Ahmed Abdelgaffar | Flutter \u0026amp; Applied AI Engineer\u0022 /\u003E\n    \u003Cmeta property=\u0022og:description\u0022 content=\u0022Explore production Flutter mobile applications, real-time AI voice orchestration (VOID), ONNX medical inference (PneumoAI), and verified AI \u0026amp; MongoDB credentials.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:type\u0022 content=\u0022website\u0022 /\u003E\n    \u003Cmeta name=\u0022twitter:card\u0022 content=\u0022summary_large_image\u0022 /\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u002296x96\u0022 href=\u0022/favicon.png\u0022 /\u003E\n    \u003Clink rel=\u0022apple-touch-icon\u0022 href=\u0022/favicon.png\u0022 /\u003E\n    \u003Cmeta name=\u0022theme-color\u0022 content=\u0022#0a0a0a\u0022 /\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.googleapis.com\u0022\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.gstatic.com\u0022 crossorigin\u003E\n    \u003Clink href=\u0022https://fonts.googleapis.com/css2?family=Instrument\u002BSerif:ital@0;1\u0026family=JetBrains\u002BMono:wght@400;500;600\u0026family=Outfit:wght@300;400;500;600;700;800\u0026family=Plus\u002BJakarta\u002BSans:wght@300;400;500;600;700\u0026display=swap\u0022 rel=\u0022stylesheet\u0022\u003E\n  \u003C/head\u003E\n  \u003Cbody class=\u0022bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black\u0022\u003E\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\n    \u003Cscript type=\u0022module\u0022 src=\u0022/src/main.tsx\u0022\u003E\u003C/script\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n\n--- server output ---\n\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 dev\r\n\u003E vite --host 0.0.0.0 --host 127.0.0.1 --port 3100\r\n\r\n\u001B[33m(!) Your Vite config uses features that are unsupported by \u0060configLoader: \u0027native\u0027\u0060, which is planned to become the default in a future major version of Vite:\r\n  - \u0060__dirname\u0060 (vite.config.ts:11:27). Use \u0060import.meta.dirname\u0060 instead\r\nSet \u0060VITE_CONFIG_NATIVE_IGNORE_WARNING=true\u0060 to suppress this warning.\u001B[39m\r\n\r\n  \u001B[32m\u001B[1mVITE\u001B[22m v8.3.6\u001B[39m  \u001B[2mready in \u001B[0m\u001B[1m480\u001B[22m\u001B[2m\u001B[0m ms\u001B[22m\r\n\r\n  \u001B[32m\u279C\u001B[39m  \u001B[1mLocal\u001B[22m:   \u001B[36mhttp://127.0.0.1:\u001B[1m3100\u001B[22m/\u001B[39m\r\n",
+        "durationMs": 2075
       },
       {
         "name": "production-homepage",
@@ -76,19 +76,16 @@
         "skipped": false,
         "skippedReason": null,
         "exitCode": null,
-        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml lang=\u0022en\u0022 class=\u0022scroll-smooth\u0022\u003E\n  \u003Chead\u003E\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\n    \u003Ctitle\u003EAhmed Abdelgaffar | Full-Stack, Java \u0026 Mobile Engineer\u003C/title\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/svg\u002Bxml\u0022 href=\u0022/assets/aistudio/monogram_logo_vector_9faf5d59.svg\u0022 /\u003E\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Portfolio of Ahmed Abdelgaffar \u2013 Full-Stack, Java Distributed Systems \u0026 Flutter Engineer. Verified MongoDB \u0026 Google Cloud Skill Badges, production projects, and interactive CV customizer.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:title\u0022 content=\u0022Ahmed Abdelgaffar | Full-Stack, Java \u0026 Mobile Engineer\u0022 /\u003E\n    \u003Cmeta property=\u0022og:description\u0022 content=\u0022Explore production projects in Spring Boot, Next.js, and Flutter, verified MongoDB \u0026 Google Cloud credentials, and customized ATS CV templates.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:type\u0022 content=\u0022website\u0022 /\u003E\n    \u003Cmeta name=\u0022twitter:card\u0022 content=\u0022summary_large_image\u0022 /\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.googleapis.com\u0022\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.gstatic.com\u0022 crossorigin\u003E\n    \u003Clink href=\u0022https://fonts.googleapis.com/css2?family=Instrument\u002BSerif:ital@0;1\u0026family=JetBrains\u002BMono:wght@400;500;600\u0026family=Outfit:wght@300;400;500;600;700;800\u0026family=Plus\u002BJakarta\u002BSans:wght@300;400;500;600;700\u0026display=swap\u0022 rel=\u0022stylesheet\u0022\u003E\n    \u003Cscript type=\u0022module\u0022 crossorigin src=\u0022/assets/index-C0z0AHFH.js\u0022\u003E\u003C/script\u003E\n    \u003Clink rel=\u0022stylesheet\u0022 crossorigin href=\u0022/assets/index-BVnTmMdi.css\u0022\u003E\n  \u003C/head\u003E\n  \u003Cbody class=\u0022bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black\u0022\u003E\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n--- server output ---\n\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 start\r\n\u003E tsx server.ts --production\r\n\r\nnode:events:486\r\n      throw er; // Unhandled \u0027error\u0027 event\r\n      ^\r\n\r\nError: listen EADDRINUSE: address already in use 0.0.0.0:3101\r\n    at Server.setupListenHandle [as _listen2] (node:net:1940:16)\r\n    at listenInCluster (node:net:1997:12)\r\n    at node:net:2206:7\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)\r\nEmitted \u0027error\u0027 event on Server instance at:\r\n    at emitErrorNT (node:net:1976:8)\r\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {\r\n  code: \u0027EADDRINUSE\u0027,\r\n  errno: -4091,\r\n  syscall: \u0027listen\u0027,\r\n  address: \u00270.0.0.0\u0027,\r\n  port: 3101\r\n}\r\n\r\nNode.js v24.11.0\r\n",
-        "durationMs": 2044
+        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml lang=\u0022en\u0022 class=\u0022scroll-smooth\u0022\u003E\n  \u003Chead\u003E\n    \u003Cmeta charset=\u0022UTF-8\u0022 /\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022width=device-width, initial-scale=1.0\u0022 /\u003E\n    \u003Ctitle\u003EAhmed Abdelgaffar | Flutter \u0026amp; Applied AI Engineer\u003C/title\u003E\n    \u003Cmeta name=\u0022description\u0022 content=\u0022Portfolio of Ahmed Abdelgaffar \u2013 Flutter Mobile Architect \u0026amp; Applied AI Engineer. Production mobile apps on App Store/Google Play, real-time voice agents, ONNX inference, and RAG systems.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:title\u0022 content=\u0022Ahmed Abdelgaffar | Flutter \u0026amp; Applied AI Engineer\u0022 /\u003E\n    \u003Cmeta property=\u0022og:description\u0022 content=\u0022Explore production Flutter mobile applications, real-time AI voice orchestration (VOID), ONNX medical inference (PneumoAI), and verified AI \u0026amp; MongoDB credentials.\u0022 /\u003E\n    \u003Cmeta property=\u0022og:type\u0022 content=\u0022website\u0022 /\u003E\n    \u003Cmeta name=\u0022twitter:card\u0022 content=\u0022summary_large_image\u0022 /\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u002296x96\u0022 href=\u0022/favicon.png\u0022 /\u003E\n    \u003Clink rel=\u0022apple-touch-icon\u0022 href=\u0022/favicon.png\u0022 /\u003E\n    \u003Cmeta name=\u0022theme-color\u0022 content=\u0022#0a0a0a\u0022 /\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.googleapis.com\u0022\u003E\n    \u003Clink rel=\u0022preconnect\u0022 href=\u0022https://fonts.gstatic.com\u0022 crossorigin\u003E\n    \u003Clink href=\u0022https://fonts.googleapis.com/css2?family=Instrument\u002BSerif:ital@0;1\u0026family=JetBrains\u002BMono:wght@400;500;600\u0026family=Outfit:wght@300;400;500;600;700;800\u0026family=Plus\u002BJakarta\u002BSans:wght@300;400;500;600;700\u0026display=swap\u0022 rel=\u0022stylesheet\u0022\u003E\n    \u003Cscript type=\u0022module\u0022 crossorigin src=\u0022/assets/index-Bo4WRyvp.js\u0022\u003E\u003C/script\u003E\n    \u003Clink rel=\u0022stylesheet\u0022 crossorigin href=\u0022/assets/index-DY5P56ur.css\u0022\u003E\n  \u003C/head\u003E\n  \u003Cbody class=\u0022bg-[var(--background)] text-[var(--foreground)] antialiased selection:bg-neutral-800 selection:text-white dark:selection:bg-white dark:selection:text-black\u0022\u003E\n    \u003Cdiv id=\u0022root\u0022\u003E\u003C/div\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n\n--- server output ---\n\r\n\u003E ahmed-abdelgaffar-portfolio@0.0.0 start\r\n\u003E wrangler pages dev dist --ip 127.0.0.1 --port 3101\r\n\r\n\r\n \u26C5\uFE0F wrangler 4.162.0\r\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\r\n\u001B[33m\u25B2 \u001B[43;33m[\u001B[43;30mWARNING\u001B[43;33m]\u001B[0m \u001B[1mNo compatibility_date was specified. Using the default compatibility date: 2026-11-13.\u001B[0m\r\n\r\n  \u276F\u276F Add one to your Wrangler configuration file: compatibility_date = \u00222026-11-13\u0022, or\r\n  \u276F\u276F Pass it in your terminal: wrangler pages dev [\u003CDIRECTORY\u003E] --compatibility-date=2026-11-13\r\n  \r\n  See \u001B[4mhttps://developers.cloudflare.com/workers/platform/compatibility-dates/\u001B[0m for more information.\r\n\r\n\r\n\u2728 Compiled Worker successfully\r\nUsing secrets defined in .env\r\nYour Worker has access to the following bindings:\r\nBinding                                                                   Resource                  Mode\r\nenv.CF_PAGES (\u00221\u0022)                                                        Environment Variable      local\r\nenv.CF_PAGES_BRANCH (\u0022feat/cloudflare-pages-api\u0022)                         Environment Variable      local\r\nenv.CF_PAGES_COMMIT_SHA (\u0022562c83ff55da91b19fe96d1997a38843b5e63...\u0022)      Environment Variable      local\r\nenv.CF_PAGES_URL (\u0022https://562c83f.portfolio.pages.dev\u0022)                  Environment Variable      local\r\nenv.SMTP_HOST (\u0022(hidden)\u0022)                                                Environment Variable      local\r\nenv.SMTP_PORT (\u0022(hidden)\u0022)                                                Environment Variable      local\r\nenv.SMTP_SECURE (\u0022(hidden)\u0022)                                              Environment Variable      local\r\nenv.SMTP_USER (\u0022(hidden)\u0022)                                                Environment Variable      local\r\nenv.SMTP_PASS (\u0022(hidden)\u0022)                                                Environment Variable      local\r\nenv.SMTP_FROM_NAME (\u0022(hidden)\u0022)                                           Environment Variable      local\r\nenv.SMTP_FROM (\u0022(hidden)\u0022)                                                Environment Variable      local\r\nenv.CONTACT_EMAIL_TO (\u0022(hidden)\u0022)                                         Environment Variable      local\r\nenv.GEMINI_API_KEY (\u0022(hidden)\u0022)                                           Environment Variable      local\r\nenv.FISH_AP\n\u2026[truncated]",
+        "durationMs": 4254
       }
     ],
     "executions": [
       {
         "source": "setup[0]",
-        "resolvedExecutable": "C:\\Program Files\\nodejs\\npx.CMD",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
         "args": [
-          "--yes",
-          "bun",
-          "install",
-          "--frozen-lockfile"
+          "ci"
         ],
         "cwd": "E:\\IMP\\portfolio",
         "env": {},
@@ -135,12 +132,15 @@
         "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
         "args": [
           "run",
-          "dev"
+          "dev",
+          "--",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "3100"
         ],
         "cwd": "E:\\IMP\\portfolio",
-        "env": {
-          "PORT": "3100"
-        },
+        "env": {},
         "prependPath": [],
         "platform": "win32"
       },
@@ -149,12 +149,15 @@
         "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
         "args": [
           "run",
-          "start"
+          "start",
+          "--",
+          "--ip",
+          "127.0.0.1",
+          "--port",
+          "3101"
         ],
         "cwd": "E:\\IMP\\portfolio",
-        "env": {
-          "PORT": "3101"
-        },
+        "env": {},
         "prependPath": [],
         "platform": "win32"
       }

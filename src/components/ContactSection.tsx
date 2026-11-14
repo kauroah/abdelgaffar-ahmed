@@ -258,7 +258,7 @@ export const ContactSection: React.FC = () => {
                     {isSending ? (
                       <>
                         <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                        <span>Sending via SMTP...</span>
+                        <span>Sending email...</span>
                       </>
                     ) : (
                       <>
