@@ -77,8 +77,23 @@ The Vite frontend is deployed as a static site, and `api/[...path].ts` serves th
 1. In Vercel, choose **Add New → Project** and import `kauroah/abdelgaffar-ahmed`.
 2. Keep the detected Vite settings: build command `npm run build`, output directory `dist`.
 3. Add environment variables in **Project Settings → Environment Variables**:
-   - `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM_NAME`, `SMTP_FROM`, and `CONTACT_EMAIL_TO` for the contact form.
+   - `RESEND_API_KEY`, `RESEND_FROM`, and `CONTACT_EMAIL_TO` for the contact form.
    - `GEMINI_API_KEY` for generated VOID dialogue audio. `FISH_API_KEY` is optional.
 4. Deploy from the Vercel dashboard. Future pushes to the connected GitHub branch will deploy automatically.
 
 Do not commit production secrets. Credly and audio caches use the function's temporary storage on Vercel, so they are not durable between function instances.
+
+## Deploying to Cloudflare Pages
+
+Cloudflare Pages serves the Vite build and discovers API routes in `functions/`.
+
+1. Build the site with `npm run build`.
+2. Push to the connected Git branch; Cloudflare Pages will build and deploy it. For a manual deployment, use `npx wrangler pages deploy dist --project-name <your-pages-project>`.
+3. Add `RESEND_API_KEY` as a Pages Function secret. Set `RESEND_FROM` and `CONTACT_EMAIL_TO` as environment variables.
+4. Until you verify a domain with Resend, use `Ahmed Abdelgaffar <onboarding@resend.dev>` only for tests sent to the verified email on your Resend account. For production, verify a domain and change `RESEND_FROM` to an address on that domain.
+
+In Cloudflare Pages project settings, add `RESEND_API_KEY` as a secret and set `RESEND_FROM` and `CONTACT_EMAIL_TO` as environment variables for both preview and production environments.
+
+For local development, copy `.dev.vars.example` to `.dev.vars`, enter the key there, build with `npm run build`, then run `npm run cf:dev`. `.dev.vars` is git-ignored.
+
+The Pages Functions currently implement `/api/contact` and `/api/health`; Credly badge sync and VOID audio generation still need Pages Function implementations or a separately hosted Node backend.

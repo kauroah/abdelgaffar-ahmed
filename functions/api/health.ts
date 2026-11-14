@@ -2,6 +2,7 @@ interface Env {
   GEMINI_API_KEY?: string;
   FISH_API_KEY?: string;
   RESEND_API_KEY?: string;
+  RESEND_FROM?: string;
   CONTACT_EMAIL_TO?: string;
 }
 interface PagesFunctionContext {
@@ -14,7 +15,7 @@ export const onRequestGet = async (
   const configured = {
     gemini: Boolean(context.env.GEMINI_API_KEY),
     fishAudio: Boolean(context.env.FISH_API_KEY),
-    resend: Boolean(context.env.RESEND_API_KEY),
+    resend: Boolean(context.env.RESEND_API_KEY && context.env.RESEND_FROM),
     contactRecipient: Boolean(context.env.CONTACT_EMAIL_TO),
   };
   return Response.json(

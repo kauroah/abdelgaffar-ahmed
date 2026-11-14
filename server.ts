@@ -6,7 +6,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { createServer as createViteServer } from 'vite';
 import { GoogleGenAI } from '@google/genai';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -654,50 +654,31 @@ app.post('/api/contact', async (req, res) => {
     });
   }
 
-  const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
-  const smtpPort = Number(process.env.SMTP_PORT || 587);
-  const smtpSecure = process.env.SMTP_SECURE === 'true';
-  const smtpUser = (process.env.SMTP_USER || 'ahmedabdelhady0246@gmail.com').trim();
-  const smtpPass = (process.env.SMTP_PASS || '').trim();
-  const configuredFromName = (process.env.SMTP_FROM_NAME || process.env.SMTP_FROM || '').replace(/"/g, '').trim();
-  const smtpFromName = !configuredFromName || /^portfolio$/i.test(configuredFromName)
-    ? 'Ahmed Abdelgaffar'
-    : configuredFromName;
-  const smtpFromRaw = (process.env.SMTP_FROM || '').trim();
+  const resendApiKey = (process.env.RESEND_API_KEY || '').trim();
+  const resendFrom = (process.env.RESEND_FROM || '').trim();
   const contactTo = (process.env.CONTACT_EMAIL_TO || 'ahmedabdelhady0246@gmail.com').trim();
 
-  if (!smtpPass || smtpPass === 'MY_GMAIL_APP_PASSWORD' || smtpPass.includes('*')) {
+  if (!resendApiKey || !resendFrom) {
     return res.status(503).json({
       ok: false,
-      reason: 'smtp_unconfigured',
-      error: 'SMTP delivery is not configured yet (set SMTP_PASS in server secrets) or reach out directly via email below.',
+      reason: 'resend_unconfigured',
+      error: 'Email delivery is not configured yet. Please use the direct email link instead.',
     });
   }
 
-  const fromHeader = smtpFromRaw.includes('@') ? smtpFromRaw : `"${smtpFromName}" <${smtpUser}>`;
   const htmlMessage = escapeHtml(cleanMessage).replace(/\r\n|\r|\n/g, '<br>');
 
   try {
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: smtpPort,
-      secure: smtpSecure,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-
-    const info = await transporter.sendMail({
-      from: fromHeader,
-      to: contactTo,
+    const resend = new Resend(resendApiKey);
+    const { data, error } = await resend.emails.send({
+      from: resendFrom,
+      to: [contactTo],
       replyTo: cleanEmail,
       subject: `[Portfolio] ${cleanSubject} — ${cleanName}`,
       attachments: [{
         filename: 'ahmed-abdelgaffar-monogram.png',
         path: path.join(__dirname, 'public', 'assets', 'aistudio', 'monogram_logo_email.png'),
-        cid: 'portfolio-monogram',
-        contentDisposition: 'inline',
+        contentId: 'portfolio-monogram',
       }],
       text: [
         `NEW MESSAGE FROM YOUR PORTFOLIO`,
@@ -786,16 +767,24 @@ app.post('/api/contact', async (req, res) => {
       `,
     });
 
-    console.log(`[SMTP Contact] Delivered message ${info.messageId} from ${cleanEmail}`);
+    if (error) {
+      console.error('[Resend Contact] Delivery failed:', error.message);
+      return res.status(502).json({
+        ok: false,
+        error: 'Unable to deliver your message right now. Please try emailing directly.',
+      });
+    }
+
+    console.log(`[Resend Contact] Delivered message ${data.id} from ${cleanEmail}`);
     return res.json({
       ok: true,
-      messageId: info.messageId,
+      messageId: data.id,
     });
   } catch (err: any) {
-    console.error('[SMTP Contact] Delivery failed:', err?.message || err);
+    console.error('[Resend Contact] Request failed:', err?.message || err);
     return res.status(500).json({
       ok: false,
-      error: 'Unable to deliver message via SMTP right now. Please try emailing directly.',
+      error: 'Unable to deliver your message right now. Please try emailing directly.',
     });
   }
 });
