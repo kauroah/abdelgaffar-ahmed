@@ -1,99 +1,58 @@
 # Ahmed Abdelgaffar — Portfolio & Resume Studio
 
-Modern personal engineering portfolio and adjustable ATS CV generator built with React 19, TypeScript, Tailwind CSS, Express, and Vite.
+A React, TypeScript, and Vite portfolio deployed as a static site with Cloudflare Pages Functions for its API.
 
-## 🚀 Quick Start (Local Setup)
+## Local development
 
-### Prerequisites
-- **Node.js**: Version 18 or higher (v20+ recommended)
-- **npm**: Installed automatically with Node.js (or `pnpm` / `yarn`)
+Install dependencies and run the frontend with Vite:
 
----
-
-### Step 1: Install Dependencies
-Open your terminal in the project root folder and run:
 ```bash
 npm install
-```
-
----
-
-### Step 2: Run Development Server
-Start the local full-stack server (runs Express + Vite HMR on port 3000):
-```bash
 npm run dev
 ```
 
-Open your browser at:
-```
-http://localhost:3000
-```
+For end-to-end local development, including the Pages Functions, copy `.dev.vars.example` to `.dev.vars`, fill in the server-side values you want to test, and run:
 
----
-
-### Step 3: Production Build (Optional)
-To test or build the optimized production bundle:
 ```bash
-# Compile client assets into dist/
-npm run build
-
-# Start production server
-npm run start
+npm run cf:dev
 ```
 
----
+This builds the static site and starts Wrangler's local Pages runtime. The frontend-only Vite server does not run Pages Functions.
 
-## 🛠️ Project Structure
+## Validation
 
-- `server.ts`: Express backend handling Vite middleware, Credly badge automatic 24h background sync, and API endpoints.
-- `src/App.tsx`: Main application entry point orchestrating sections and floating navigation dock.
-- `src/components/`:
-  - `Hero.tsx`: Headline, bio, photo card, social links, and top brand header.
-  - `Logo.tsx`: Custom vector monogram logo.
-  - `ProjectsSection.tsx`: Responsive 2-column showcase of engineering case studies.
-  - `BadgesSection.tsx`: Verified MongoDB & Google Cloud badges with direct verification links.
-  - `CvStudioModal.tsx`: Adjustable resume generator with instant vector PDF download.
-  - `FloatingDock.tsx`: Floating bottom dock navigation.
-  - `TechStackSection.tsx`: 4-column categorized ecosystem breakdown.
-  - `ExperienceTimeline.tsx`: Engineering work history with X-Y-Z formula metrics.
-  - `EducationSection.tsx`: Academic degrees and scholarship history.
-  - `ContactSection.tsx`: Contact form and messaging channels.
-- `src/utils/pdfGenerator.ts`: Client-side ATS vector PDF generation using jsPDF.
-- `public/assets/aistudio/`: Local badge badges, proof certificate PDFs, and avatar assets.
+```bash
+npm run lint
+npm test
+npm run build
+```
 
----
+## Cloudflare Pages deployment
 
-## ⚙️ Available Scripts
+Cloudflare Pages builds the Vite site from `npm run build` with `dist` as its output directory. Connect the Git branch to the Pages project for preview and production deployments, or deploy manually with:
 
-- `npm run dev`: Starts the local dev server at `http://localhost:3000`
-- `npm run build`: Compiles TypeScript and creates optimized production assets in `dist/`
-- `npm run start`: Runs the Node server using production assets
-- `npm run lint`: Runs TypeScript validation (`tsc --noEmit`)
+```bash
+npx wrangler pages deploy dist --project-name <your-pages-project>
+```
 
-## Deploying to Vercel
+Add these values in the Cloudflare Pages **Functions** settings for both preview and production:
 
-The Vite frontend is deployed as a static site, and `api/[...path].ts` serves the Express API routes as a Vercel Function. Import the GitHub repository in the Vercel dashboard; the public assets currently total about 180 MB, above the Hobby plan's 100 MB CLI source-upload limit.
+| Variable | Type | Purpose |
+| --- | --- | --- |
+| `RESEND_API_KEY` | Secret | Sends contact-form messages |
+| `RESEND_FROM` | Variable | Verified Resend sender address |
+| `CONTACT_EMAIL_TO` | Variable | Contact-form recipient |
+| `GEMINI_API_KEY` | Secret | Generates VOID dialogue audio |
+| `FISH_API_KEY` | Secret, optional | Custom VOID voice for assistant turns |
 
-1. In Vercel, choose **Add New → Project** and import `kauroah/abdelgaffar-ahmed`.
-2. Keep the detected Vite settings: build command `npm run build`, output directory `dist`.
-3. Add environment variables in **Project Settings → Environment Variables**:
-   - `RESEND_API_KEY`, `RESEND_FROM`, and `CONTACT_EMAIL_TO` for the contact form.
-   - `GEMINI_API_KEY` for generated VOID dialogue audio. `FISH_API_KEY` is optional.
-4. Deploy from the Vercel dashboard. Future pushes to the connected GitHub branch will deploy automatically.
+Until a domain is verified with Resend, use `Ahmed Abdelgaffar <onboarding@resend.dev>` only for tests sent to the verified Resend account email. Production email requires a verified sending domain.
 
-Do not commit production secrets. Credly and audio caches use the function's temporary storage on Vercel, so they are not durable between function instances.
+All five values are read only by Pages Functions. The health endpoint returns boolean configuration indicators; it never returns values. No KV or R2 binding is required: Credly badge data falls back to the curated portfolio baseline when unavailable, and generated audio is cached only in a warm Worker isolate for up to 24 hours. That cache is not shared or durable, so a cold isolate may call the audio provider again.
 
-## Deploying to Cloudflare Pages
+The Pages Functions provide:
 
-Cloudflare Pages serves the Vite build and discovers API routes in `functions/`.
-
-1. Build the site with `npm run build`.
-2. Push to the connected Git branch; Cloudflare Pages will build and deploy it. For a manual deployment, use `npx wrangler pages deploy dist --project-name <your-pages-project>`.
-3. Add `RESEND_API_KEY` as a Pages Function secret. Set `RESEND_FROM` and `CONTACT_EMAIL_TO` as environment variables.
-4. Until you verify a domain with Resend, use `Ahmed Abdelgaffar <onboarding@resend.dev>` only for tests sent to the verified email on your Resend account. For production, verify a domain and change `RESEND_FROM` to an address on that domain.
-
-In Cloudflare Pages project settings, add `RESEND_API_KEY` as a secret and set `RESEND_FROM` and `CONTACT_EMAIL_TO` as environment variables for both preview and production environments.
-
-For local development, copy `.dev.vars.example` to `.dev.vars`, enter the key there, build with `npm run build`, then run `npm run cf:dev`. `.dev.vars` is git-ignored.
-
-The Pages Functions currently implement `/api/contact` and `/api/health`; Credly badge sync and VOID audio generation still need Pages Function implementations or a separately hosted Node backend.
+- `GET /api/health`
+- `POST /api/contact`
+- `GET /api/badges`
+- `POST /api/badges/sync`
+- `POST /api/void/dialogue`

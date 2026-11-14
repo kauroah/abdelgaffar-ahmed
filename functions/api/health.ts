@@ -9,14 +9,20 @@ interface PagesFunctionContext {
   env: Env;
   request: Request;
 }
+
+function isConfigured(value: string | undefined): boolean {
+  const normalized = value?.trim();
+  return Boolean(normalized && !/^your_|^my_/i.test(normalized));
+}
+
 export const onRequestGet = async (
   context: PagesFunctionContext,
 ): Promise<Response> => {
   const configured = {
-    gemini: Boolean(context.env.GEMINI_API_KEY),
-    fishAudio: Boolean(context.env.FISH_API_KEY),
-    resend: Boolean(context.env.RESEND_API_KEY && context.env.RESEND_FROM),
-    contactRecipient: Boolean(context.env.CONTACT_EMAIL_TO),
+    gemini: isConfigured(context.env.GEMINI_API_KEY),
+    fishAudio: isConfigured(context.env.FISH_API_KEY),
+    resend: isConfigured(context.env.RESEND_API_KEY) && isConfigured(context.env.RESEND_FROM),
+    contactRecipient: isConfigured(context.env.CONTACT_EMAIL_TO),
   };
   return Response.json(
     {

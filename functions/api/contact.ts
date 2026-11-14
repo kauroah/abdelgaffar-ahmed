@@ -147,7 +147,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     });
 
     if (error) {
-      console.error('[Resend Contact] Delivery failed:', error.message);
+      console.error('[Resend Contact] Delivery failed.');
       return jsonResponse({
         ok: false,
         error: 'Unable to deliver your message right now. Please try emailing directly.',
@@ -157,7 +157,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     console.log(`[Resend Contact] Delivered message ${data.id}`);
     return jsonResponse({ ok: true, messageId: data.id });
   } catch (error) {
-    console.error('[Resend Contact] Request failed:', error);
+    console.error('[Resend Contact] Request failed.');
     return jsonResponse({
       ok: false,
       error: 'Unable to deliver your message right now. Please try emailing directly.',

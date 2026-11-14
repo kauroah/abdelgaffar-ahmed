@@ -1,15 +1,12 @@
 {
-  "generatedAt": "2026-11-12T11:22:00Z",
+  "generatedAt": "2026-11-14T13:45:00Z",
   "generatedOnPlatform": "win32",
   "projectType": "webapp",
   "setup": [
     {
-      "command": "npx",
+      "command": "npm",
       "args": [
-        "--yes",
-        "bun",
-        "install",
-        "--frozen-lockfile"
+        "ci"
       ],
       "timeoutSeconds": 600
     }
@@ -56,11 +53,13 @@
       "startCommand": "npm",
       "startArgs": [
         "run",
-        "dev"
+        "dev",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "3100"
       ],
-      "env": {
-        "PORT": "3100"
-      },
       "url": "http://localhost:3100/",
       "verificationMethod": "http-status",
       "expected": "200",
@@ -72,11 +71,13 @@
       "startCommand": "npm",
       "startArgs": [
         "run",
-        "start"
+        "start",
+        "--",
+        "--ip",
+        "127.0.0.1",
+        "--port",
+        "3101"
       ],
-      "env": {
-        "PORT": "3101"
-      },
       "url": "http://localhost:3101/",
       "verificationMethod": "http-status",
       "expected": "200",

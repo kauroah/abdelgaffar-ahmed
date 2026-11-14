@@ -22,8 +22,10 @@ export function useCredlySync() {
           setBadges(data.badges);
           setLastSyncTime(data.lastSyncTime || Date.now());
           setNextSyncTime(data.nextSyncTime || Date.now() + SYNC_INTERVAL_MS);
-          setSyncStatus('success');
+          setSyncStatus(data.status === 'success' ? 'success' : 'error');
         }
+      } else {
+        setSyncStatus('error');
       }
     } catch (err) {
       console.warn('[Credly Client] Could not fetch live badges, using cached/baseline:', err);
