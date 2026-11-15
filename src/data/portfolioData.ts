@@ -171,7 +171,9 @@ export const PROFILE_DATA = {
       category: "AI & Generative Models",
       date: "Nov 2026",
       badgeImage: "/assets/aistudio/create-your-first-gemini-enterprise-application_871c6260.png",
-      verifyUrl: "https://www.credly.com/users/ahmed-abdelgaffar",
+      pdfPath: "/assets/aistudio/create-your-first-gemini-enterprise-application.pdf",
+      verifyUrl: "https://www.credly.com/badges/ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
+      credentialId: "ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
       description: "Validation of enterprise generative system design using Google Cloud Gemini models, enterprise data grounding, and vector integration.",
       keySkills: ["Gemini Enterprise", "Cloud Architecture", "Enterprise AI Workflows", "Vector Grounding"],
       highlight: true
@@ -225,7 +227,9 @@ export const PROFILE_DATA = {
       category: "AI & Generative Models",
       date: "Nov 2026",
       badgeImage: "/assets/aistudio/building-an-app-with-code-agents-and-mongodb_ac6bcf0a.png",
-      verifyUrl: "https://www.credly.com/users/ahmed-abdelgaffar",
+      pdfPath: "/assets/aistudio/BuildinganAppwithCodeAgentsandMongoDB_Badge20261115-20-692iym.pdf",
+      verifyUrl: "https://www.credly.com/badges/34b7456a-5e2d-4abe-9f68-53b114367457",
+      credentialId: "34b7456a-5e2d-4abe-9f68-53b114367457",
       description: "Designing autonomous agent systems that leverage tool-use protocols, schema introspection, and automated verification loops over database operational layers.",
       keySkills: ["AI Code Agents", "Tool Calling / Function Calling", "Atlas Data API", "Autonomous Workflows"],
       highlight: false
