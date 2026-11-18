@@ -100,7 +100,7 @@ async function fetchFromCredly(fetcher: typeof fetch): Promise<BadgeItem[]> {
       ...(baseline?.pdfPath ? { pdfPath: baseline.pdfPath } : {}),
       verifyUrl: baseline?.verifyUrl || `https://www.credly.com/badges/${item.id}`,
       credentialId: item.id,
-      description: item.badge_template?.description || baseline?.description ||
+      description: baseline?.description || item.badge_template?.description ||
         `Verified certification issued by ${issuerName || issuer}.`,
       keySkills: (item.badge_template?.skills || [])
         .map((skill) => skill.name)

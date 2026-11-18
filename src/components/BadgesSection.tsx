@@ -14,7 +14,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
   badges,
   onSelectBadge
 }) => {
-  const [filter, setFilter] = useState<'All' | 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI'>('All');
+  const [filter, setFilter] = useState<'All' | 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI' | 'Claude Academy'>('All');
 
   // Deduplicate badges by credentialId or normalized title to ensure zero duplicates
   const normTitle = (s: string) => s.toLowerCase().replace(/skill\s*badge/gi, '').replace(/[^a-z0-9]/g, '');
@@ -46,7 +46,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
             Badges &amp; <span className="animated-text-gradient italic">Certificates</span>
           </h2>
           <p className="text-sm sm:text-base lg:text-lg text-[var(--muted)] max-w-2xl mx-auto mt-3">
-            Verified technical skill badges and course certificates earned from MongoDB, Google Cloud, and FreeAcademy AI.
+            Verified technical skill badges and course certificates earned from MongoDB, Google Cloud, FreeAcademy AI, and Claude Academy.
           </p>
 
           {/* Credly Link & Filter Pills */}
@@ -63,7 +63,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
             </a>
 
             <div className="flex flex-wrap items-center justify-center gap-1 p-0.5 rounded-full border border-[var(--border)] bg-[var(--surface)]">
-              {(['All', 'Google Cloud', 'MongoDB', 'FreeAcademy AI'] as const).map((tab) => (
+              {(['All', 'Google Cloud', 'MongoDB', 'FreeAcademy AI', 'Claude Academy'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setFilter(tab)}
@@ -83,7 +83,7 @@ export const BadgesSection: React.FC<BadgesSectionProps> = ({
         {/* Badges Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
           {filteredBadges.map((badge) => {
-            const isCertificate = badge.issuer === 'FreeAcademy AI';
+            const isCertificate = badge.issuer === 'FreeAcademy AI' || badge.issuer === 'Claude Academy';
             return (
             <div
               key={badge.id}

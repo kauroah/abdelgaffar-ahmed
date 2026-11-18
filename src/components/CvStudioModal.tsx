@@ -65,7 +65,7 @@ export const CvStudioModal: React.FC<CvStudioModalProps> = ({ isOpen, onClose })
       .join('\n');
 
     const badgesMd = includeBadges
-      ? `\n---\n\n## ${nextNum()} · VERIFIED CERTIFICATIONS & SKILL BADGES (13)\n${resume.badges
+      ? `\n---\n\n## ${nextNum()} · VERIFIED CERTIFICATIONS & SKILL BADGES (16)\n${resume.badges
           .map((b) => `* ${b}`)
           .join('\n')}`
       : '';
@@ -432,7 +432,7 @@ ${resume.languages}
                   <div>
                     <div className="flex items-baseline justify-between border-b border-[var(--border)] pb-1 mb-2.5">
                       <h2 className="font-serif text-base sm:text-lg font-normal text-[var(--foreground)]">
-                        Verified Credentials &amp; Certificates (13)
+                        Verified Credentials &amp; Certificates (16)
                       </h2>
                       <span className="text-[11px] font-mono text-[var(--muted)]">
                         {sectionNumbers.badges}

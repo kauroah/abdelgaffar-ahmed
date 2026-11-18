@@ -45,7 +45,7 @@ const ROLE_SUMMARIES: Record<
     subtitle:
       'Flutter SDK · Dart · BLoC / Clean Architecture · Gemini / LLM APIs · Voice Agents · MongoDB RAG · ONNX',
     summary:
-      'Software Engineer specializing in cross-platform Flutter mobile systems and Applied Generative AI integration. Shipped production mobile apps published on Apple App Store, Google Play, and RuStore while accelerating Flutter rendering efficiency by 30% via BLoC state isolation. Built full-duplex AI voice agents (VOID), quantized ONNX medical imaging pipelines (<3s latency with Grad-CAM & local LLMs), and MongoDB Vector Search RAG architectures. Verified by 13 credentials from Google Cloud, MongoDB, and FreeAcademy AI.',
+      'Software Engineer specializing in cross-platform Flutter mobile systems and Applied Generative AI integration. Shipped production mobile apps published on Apple App Store, Google Play, and RuStore while accelerating Flutter rendering efficiency by 30% via BLoC state isolation. Built full-duplex AI voice agents (VOID), quantized ONNX medical imaging pipelines (<3s latency with Grad-CAM & local LLMs), and MongoDB Vector Search RAG architectures. Verified by 16 credentials from Google Cloud, MongoDB, FreeAcademy AI, and Claude Academy.',
     primarySkills:
       'Flutter SDK, Dart, BLoC / Cubit, Clean Architecture, Gemini API, Real-Time Voice / VAD / TTS, MongoDB Atlas Vector Search (RAG), ONNX Runtime, Python, Firebase Firestore, TypeScript, Next.js, Node.js, PostgreSQL.',
   },
@@ -62,7 +62,7 @@ const ROLE_SUMMARIES: Record<
     subtitle:
       'Gemini API · Voice Agents · MongoDB RAG · Vector Search · ONNX Runtime · Python · Next.js',
     summary:
-      'Software Engineer specializing in applied generative AI systems, real-time voice agent orchestration, Retrieval-Augmented Generation (RAG) pipelines, and quantized model inference. Certified by Google Cloud in AI Studio Prototyping, MongoDB in Vector Search and Code Agents, and FreeAcademy AI in How LLMs Work and Prompt Engineering. Built VOID full-duplex voice agent and PneumoAI sub-3s ONNX diagnostic platform.',
+      'Software Engineer specializing in applied generative AI systems, real-time voice agent orchestration, Retrieval-Augmented Generation (RAG) pipelines, and quantized model inference. Certified by Google Cloud in AI Studio Prototyping, MongoDB in Vector Search and Code Agents, FreeAcademy AI in How LLMs Work and Prompt Engineering, and Claude Academy in Claude Code and AI Fluency. Built VOID full-duplex voice agent and PneumoAI sub-3s ONNX diagnostic platform.',
     primarySkills:
       'Gemini API, Google AI Studio, Full-Duplex Voice / VAD / TTS, MongoDB Atlas Vector Search, RAG Pipelines, ONNX Runtime, Ollama (Qwen-2.5), Python, Next.js, TypeScript, Node.js, PostgreSQL, Docker.',
   },
@@ -70,7 +70,7 @@ const ROLE_SUMMARIES: Record<
     title: 'Senior Full-Stack & Mobile Developer',
     subtitle: 'Flutter · TypeScript · Next.js · Node.js · Java 21 / Spring Boot · PostgreSQL',
     summary:
-      'Full-Stack & Mobile Software Engineer with production experience shipping cross-platform Flutter apps (Apple App Store, Google Play, RuStore), TypeScript/Next.js web applications, Applied AI integrations, and Java 21 / Spring Boot distributed services. Certified by Google Cloud, MongoDB, and FreeAcademy AI across 13 technical credentials.',
+      'Full-Stack & Mobile Software Engineer with production experience shipping cross-platform Flutter apps (Apple App Store, Google Play, RuStore), TypeScript/Next.js web applications, Applied AI integrations, and Java 21 / Spring Boot distributed services. Certified by Google Cloud, MongoDB, FreeAcademy AI, and Claude Academy across 16 technical credentials.',
     primarySkills:
       'Flutter SDK, Dart, TypeScript, React 19, Next.js 15, Node.js, Express, Java 21, Spring Boot 3, PostgreSQL, MongoDB Atlas, Redis, Docker, RESTful APIs.',
   },
@@ -135,6 +135,7 @@ export function buildResumeData(
     'Google Cloud Skill Badges (2): Develop AI-Powered Prototypes in Google AI Studio (Credly: C34mJTu0) & Create Your First Gemini Enterprise Application | Nov 2026',
     'MongoDB Skill Badges (4): Building RAG Apps Using MongoDB (0ca8c49e), Resilient AI Strategy (ukc2g4FK), Schema Design Optimization (8e30ce61) & Building an App with Code Agents | Nov 2026',
     'FreeAcademy AI Certificates (7): Advanced Python Programming, How LLMs Actually Work, Prompt Engineering, Debug Any Code with AI, Figma AI Features, Canva AI, AI for Aerospace Engineers | Nov 2026',
+    'Claude Academy Badges (3): Claude Code in Action, Claude Code 101, AI Fluency: Framework and Foundations | Nov 2026',
   ];
 
   const foundersExp: ResumeExperienceEntry = {

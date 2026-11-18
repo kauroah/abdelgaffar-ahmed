@@ -1,7 +1,7 @@
 export interface BadgeItem {
   id: string;
   title: string;
-  issuer: 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI';
+  issuer: 'Google Cloud' | 'MongoDB' | 'FreeAcademy AI' | 'Claude Academy';
   category:
     | 'AI & Generative Models'
     | 'Database Architecture'
@@ -12,7 +12,7 @@ export interface BadgeItem {
   date: string;
   badgeImage: string;
   pdfPath?: string;
-  verifyUrl: string;
+  verifyUrl?: string;
   credentialId?: string;
   description: string;
   keySkills: string[];
@@ -109,7 +109,7 @@ export const PROFILE_DATA = {
   },
   metrics: [
     { label: "Mobile Render Efficiency", value: "+30%", detail: "Heap allocation & rebuild reduction via BLoC isolation" },
-    { label: "Industry Credentials", value: "13", detail: "MongoDB, Google Cloud & FreeAcademy AI verified" },
+    { label: "Industry Credentials", value: "16", detail: "MongoDB, Google Cloud, FreeAcademy AI & Claude Academy" },
     { label: "App Store Deployments", value: "3", detail: "Apple App Store, Google Play, RuStore releases" },
     { label: "Language Proficiencies", value: "3", detail: "Arabic (Native), English (C1), Russian (C1)" },
   ],
@@ -160,7 +160,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/DevelopAI-PoweredPrototypesinGoogleAIStudio_Badge20261108-20-39f0j5_e15d90d2.pdf",
       verifyUrl: "https://www.credly.com/go/C34mJTu0",
       credentialId: "C34mJTu0",
-      description: "Validation of generative AI prototyping using Google AI Studio and Gemini multimodal models, prompt engineering, structured JSON schemas, and API integration.",
+      description: "A hands-on credential in turning Gemini ideas into working prototypes with Google AI Studio. It highlights prompt design, multimodal experimentation, structured outputs, and connecting a prototype to an API.",
       keySkills: ["Google AI Studio", "Gemini API", "Prompt Engineering", "Multimodal Reasoning", "API Prototyping"],
       highlight: true
     },
@@ -174,7 +174,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/create-your-first-gemini-enterprise-application.pdf",
       verifyUrl: "https://www.credly.com/badges/ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
       credentialId: "ba605a88-6a9d-4ecb-b6c7-0fa1d20c4041",
-      description: "Validation of enterprise generative system design using Google Cloud Gemini models, enterprise data grounding, and vector integration.",
+      description: "A practical introduction to building an application with Gemini for enterprise use. The credential focuses on grounding model responses in organizational data and connecting AI workflows with cloud and vector-search services.",
       keySkills: ["Gemini Enterprise", "Cloud Architecture", "Enterprise AI Workflows", "Vector Grounding"],
       highlight: true
     },
@@ -188,7 +188,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/SkillsCert20261108-20-7qqxcp_54238565.pdf",
       verifyUrl: "https://www.credly.com/badges/0ca8c49e-ba32-4458-bec8-26c4810ec69f",
       credentialId: "0ca8c49e-ba32-4458-bec8-26c4810ec69f",
-      description: "Hands-on implementation of Retrieval-Augmented Generation (RAG) using MongoDB Atlas Vector Search, semantic chunking, vector embeddings, and context-window injection.",
+      description: "A practical RAG workflow that retrieves relevant information before an LLM generates a response. It covers preparing content, creating embeddings, and using MongoDB Atlas Vector Search to provide useful context to the model.",
       keySkills: ["MongoDB Vector Search", "RAG Architecture", "Semantic Search", "LLM Embeddings", "Context Pipelines"],
       highlight: true
     },
@@ -202,7 +202,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/AIandInnovationHowMongoDBEnablesaResilientAIStrategy_Badge20261108-20-wvu1ps_a644e4e3.pdf",
       verifyUrl: "https://www.credly.com/go/ukc2g4FK",
       credentialId: "ukc2g4FK",
-      description: "Architectural qualification in structuring unified, high-availability operational data architectures for enterprise AI systems and live streaming ingestion.",
+      description: "An overview of the data foundations behind resilient AI products. It connects unified data access, operational availability, and real-time data flows with the ability to evolve AI applications as needs change.",
       keySkills: ["Resilient AI Architecture", "Unified Data Strategy", "High Availability", "Real-time Operations"],
       highlight: true
     },
@@ -216,7 +216,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/SkillsCert20261108-20-avms7k_599a63e3.pdf",
       verifyUrl: "https://www.credly.com/badges/8e30ce61-6851-4b23-87b0-b84a634ffa1f",
       credentialId: "8e30ce61-6851-4b23-87b0-b84a634ffa1f",
-      description: "Advanced validation of document modeling design patterns, compound index strategies, aggregation pipeline stages, and query plan profiling.",
+      description: "A credential in shaping MongoDB collections around application access patterns. It highlights document-modeling choices, index design, aggregation pipelines, and query analysis to help keep data operations efficient.",
       keySkills: ["Schema Design Patterns", "Index Optimization", "Aggregation Pipelines", "Query Profiling", "Document Modeling"],
       highlight: true
     },
@@ -230,9 +230,45 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/BuildinganAppwithCodeAgentsandMongoDB_Badge20261115-20-692iym.pdf",
       verifyUrl: "https://www.credly.com/badges/34b7456a-5e2d-4abe-9f68-53b114367457",
       credentialId: "34b7456a-5e2d-4abe-9f68-53b114367457",
-      description: "Designing autonomous agent systems that leverage tool-use protocols, schema introspection, and automated verification loops over database operational layers.",
+      description: "A practical look at building an application with coding agents and MongoDB. It brings together agent tool use, database access, and verification workflows so an agent can work with application data more effectively.",
       keySkills: ["AI Code Agents", "Tool Calling / Function Calling", "Atlas Data API", "Autonomous Workflows"],
       highlight: false
+    },
+    {
+      id: "claude-code-in-action",
+      title: "Claude Code in Action",
+      issuer: "Claude Academy",
+      category: "Programming & Development",
+      date: "Nov 18, 2026",
+      badgeImage: "/assets/certificates/claude-academy-claude-code-in-action.jpg",
+      pdfPath: "/assets/aistudio/claude-academy-claude-code-in-action.pdf",
+      description: "This course focuses on using Claude Code as an AI coding assistant on real software projects. It introduces a workflow for exploring a codebase, asking the agent to make changes, and checking the results before using them. The badge is relevant to developers learning how agentic coding can fit into day-to-day development.",
+      keySkills: ["Claude Code", "AI-Assisted Development", "Agentic Coding"],
+      highlight: true
+    },
+    {
+      id: "claude-code-101",
+      title: "Claude Code 101",
+      issuer: "Claude Academy",
+      category: "Programming & Development",
+      date: "Nov 18, 2026",
+      badgeImage: "/assets/certificates/claude-academy-claude-code-101.jpg",
+      pdfPath: "/assets/aistudio/claude-academy-claude-code-101.pdf",
+      description: "This beginner-level course introduces Claude Code as an AI coding assistant for software development. It explains how a developer can use it to explore an existing project, request help with coding tasks, and review suggested edits. The certificate is for learners building a foundation in practical, AI-assisted coding.",
+      keySkills: ["Claude Code", "AI-Assisted Coding", "Developer Productivity"],
+      highlight: true
+    },
+    {
+      id: "claude-ai-fluency-framework-foundations",
+      title: "AI Fluency: Framework and Foundations",
+      issuer: "Claude Academy",
+      category: "AI & Generative Models",
+      date: "Nov 18, 2026",
+      badgeImage: "/assets/certificates/claude-academy-ai-fluency-framework-foundations.jpg",
+      pdfPath: "/assets/aistudio/claude-academy-ai-fluency-framework-foundations.pdf",
+      description: "This course introduces a framework for working with AI thoughtfully and effectively. It helps learners understand how to collaborate with generative AI, judge whether its responses are useful, and apply it with care in everyday tasks. The certificate represents foundational AI fluency rather than training in one specific AI tool.",
+      keySkills: ["AI Fluency", "AI Frameworks", "Generative AI"],
+      highlight: true
     },
     {
       id: "freeacademy-advanced-python",
@@ -244,7 +280,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/Advanced_Python_Programming_-_Certificate_d990c942.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-APP-PW1QHX",
       credentialId: "FA-2026-APP-PW1QHX",
-      description: "Certificate in advanced Python programming, covering language features and practical software development.",
+      description: "A deeper study of Python for writing maintainable application code. It covers core language techniques, object-oriented programming, data structures, and debugging in practical development scenarios.",
       keySkills: ["Python", "Object-Oriented Programming", "Data Structures", "Debugging", "Software Development"],
       highlight: true
     },
@@ -258,7 +294,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/How_LLMs_Work_-_Certificate_3950364a.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MHLW-27M17O",
       credentialId: "FA-2026-MHLW-27M17O",
-      description: "Course certificate covering the core concepts behind large language models and how they generate text.",
+      description: "A conceptual introduction to how large language models process input and produce text. It covers ideas such as tokenization and transformer architecture to make generative AI behavior easier to understand.",
       keySkills: ["Large Language Models", "Tokenization", "Transformer Architecture", "Text Generation", "Generative AI"],
       highlight: true
     },
@@ -272,7 +308,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/Figma_AI_Features_-_Certificate_43583b8e.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MFAF-JK0NIM",
       credentialId: "FA-2026-MFAF-JK0NIM",
-      description: "Course certificate on using Figma AI features to accelerate interface design and prototyping workflows.",
+      description: "A practical overview of using Figma's AI features during interface design. It shows how AI-assisted exploration can support early concepts, iteration, and prototyping while keeping design decisions in the creator's hands.",
       keySkills: ["Figma", "AI-Assisted Design", "UI Design", "Prototyping", "Design Workflow"],
       highlight: false
     },
@@ -286,7 +322,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/Canva_AI_For_Non_Designers_-_Certificate_6bd27ca3.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MCAF-DA1STY",
       credentialId: "FA-2026-MCAF-DA1STY",
-      description: "Course certificate on using Canva AI tools to create and refine visual content without a professional design background.",
+      description: "An introduction to using Canva's AI tools to create and refine visual materials. It focuses on making common design tasks more approachable, from developing an initial idea to polishing a finished asset.",
       keySkills: ["Canva", "AI-Assisted Design", "Visual Content", "Graphic Design", "Generative AI"],
       highlight: false
     },
@@ -300,7 +336,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/Debug_Code_With_AI_-_Certificate_e4edea94.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-MDCW-L9E6KS",
       credentialId: "FA-2026-MDCW-L9E6KS",
-      description: "Course certificate on applying AI tools to investigate software defects and support debugging workflows.",
+      description: "A practical approach to using AI as a debugging partner. It covers framing a problem, sharing relevant code or errors, evaluating suggested fixes, and using root-cause analysis rather than accepting a patch blindly.",
       keySkills: ["AI-Assisted Debugging", "Root Cause Analysis", "Prompting", "Code Review", "Software Troubleshooting"],
       highlight: true
     },
@@ -314,7 +350,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/AI_For_Aerospace_Mechanical_Engineers_-_Certificate_bf095b4b.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-AFAM-79GNLW",
       credentialId: "FA-2026-AFAM-79GNLW",
-      description: "Course certificate exploring applications of artificial intelligence in aerospace and mechanical engineering contexts.",
+      description: "An introduction to where AI can support aerospace and mechanical engineering work. It connects AI concepts with engineering use cases, helping identify opportunities to apply these tools in technical workflows.",
       keySkills: ["Artificial Intelligence", "Aerospace Engineering", "Mechanical Engineering", "Engineering Applications", "Applied AI"],
       highlight: false
     },
@@ -328,7 +364,7 @@ export const PROFILE_DATA = {
       pdfPath: "/assets/aistudio/Prompt_Engineering_-_Certificate_b1c5d7d4.pdf",
       verifyUrl: "https://freeacademy.ai/verify/FA-2026-PE-AOE5VO",
       credentialId: "FA-2026-PE-AOE5VO",
-      description: "Course certificate in writing and refining prompts for clearer, more useful outputs from generative AI systems.",
+      description: "A foundation in communicating tasks to generative AI systems. It covers structuring and refining prompts, setting useful context, and assessing outputs so responses better match the intended goal.",
       keySkills: ["Prompt Engineering", "Generative AI", "Instruction Design", "LLM Interaction", "Output Evaluation"],
       highlight: true
     }

@@ -11,6 +11,7 @@ vi.mock('resend', () => ({
 import { onRequestGet as healthGet } from '../functions/api/health';
 import { handleContact, onRequestPost as contactPost } from '../functions/api/contact';
 import { handleBadgesGet, handleBadgesSync } from '../functions/api/badges';
+import { PROFILE_DATA } from '../src/data/portfolioData';
 import {
   clearDialogueAudioCache,
   handleDialogueRequest,
@@ -220,17 +221,30 @@ describe('Cloudflare Pages API routes', () => {
 
   it('syncs Credly badges and merges locally curated baseline badges', async () => {
     const fetcher = vi.fn(async () => Response.json({
-      data: [{
-        id: 'credential-123',
-        name: 'Test Cloud Badge',
-        image_url: 'https://example.com/badge.png',
-        issuer: { entities: [{ entity: { name: 'Google Cloud' } }] },
-        badge_template: {
+      data: [
+        {
+          id: 'credential-123',
           name: 'Test Cloud Badge',
-          description: 'Verified badge',
-          skills: [{ name: 'Cloud' }],
+          image_url: 'https://example.com/badge.png',
+          issuer: { entities: [{ entity: { name: 'Google Cloud' } }] },
+          badge_template: {
+            name: 'Test Cloud Badge',
+            description: 'Verified badge',
+            skills: [{ name: 'Cloud' }],
+          },
         },
-      }],
+        {
+          id: 'C34mJTu0',
+          name: 'Develop AI-Powered Prototypes in Google AI Studio',
+          image_url: 'https://example.com/google-badge.png',
+          issuer: { entities: [{ entity: { name: 'Google Cloud' } }] },
+          badge_template: {
+            name: 'Develop AI-Powered Prototypes in Google AI Studio',
+            description: 'Generic provider description',
+            skills: [{ name: 'AI' }],
+          },
+        },
+      ],
     }));
 
     const response = await handleBadgesSync(
@@ -244,6 +258,9 @@ describe('Cloudflare Pages API routes', () => {
     expect(body.status).toBe('success');
     expect(body.badges.some((badge: { credentialId?: string }) => badge.credentialId === 'credential-123')).toBe(true);
     expect(body.badges.length).toBeGreaterThan(1);
+    const syncedGoogleBadge = body.badges.find((badge: { credentialId?: string }) => badge.credentialId === 'C34mJTu0');
+    const curatedGoogleBadge = PROFILE_DATA.badges.find((badge) => badge.credentialId === 'C34mJTu0');
+    expect(syncedGoogleBadge.description).toBe(curatedGoogleBadge?.description);
   });
 
   it('requires badge-sync authentication and blocks refreshes at the configured limit', async () => {

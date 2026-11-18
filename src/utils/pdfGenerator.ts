@@ -131,7 +131,7 @@ export function generateAndDownloadPdf(
 
   // 4. Verified Certifications & Badges
   if (includeBadges) {
-    renderSectionHeader('Verified Certifications & Skill Badges (13)');
+    renderSectionHeader('Verified Certifications & Skill Badges (16)');
     resume.badges.forEach((badgeLine) => {
       renderBullet(badgeLine);
     });

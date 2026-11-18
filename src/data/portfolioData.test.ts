@@ -25,13 +25,32 @@ describe('portfolio profile data', () => {
     const certificates = PROFILE_DATA.badges.filter((badge) => badge.issuer === 'FreeAcademy AI');
 
     expect(certificates).toHaveLength(7);
-    expect(certificates.every((badge) => badge.verifyUrl.startsWith('https://freeacademy.ai/verify/'))).toBe(true);
+    expect(certificates.every((badge) => badge.verifyUrl?.startsWith('https://freeacademy.ai/verify/'))).toBe(true);
     expect(certificates.every((badge) => badge.keySkills.length >= 3)).toBe(true);
     for (const certificate of certificates) {
       if (!certificate.badgeImage) {
         throw new Error(`Missing certificate image for ${certificate.title}`);
       }
       expect(existsSync(resolve(process.cwd(), 'public', certificate.badgeImage.slice(1)))).toBe(true);
+    }
+  });
+
+  it('includes all three Claude Academy badges with local certificate PDFs and thumbnails', () => {
+    const certificates = PROFILE_DATA.badges.filter((badge) => badge.issuer === 'Claude Academy');
+
+    expect(certificates.map((badge) => badge.title)).toEqual([
+      'Claude Code in Action',
+      'Claude Code 101',
+      'AI Fluency: Framework and Foundations',
+    ]);
+    for (const certificate of certificates) {
+      expect(certificate.badgeImage).toMatch(/^\/assets\//);
+      expect(existsSync(resolve(process.cwd(), 'public', certificate.badgeImage.slice(1)))).toBe(true);
+      if (!certificate.pdfPath) {
+        throw new Error(`Missing certificate PDF for ${certificate.title}`);
+      }
+      expect(certificate.pdfPath).toMatch(/^\/assets\//);
+      expect(existsSync(resolve(process.cwd(), 'public', certificate.pdfPath.slice(1)))).toBe(true);
     }
   });
 });
